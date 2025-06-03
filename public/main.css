@@ -1,0 +1,134 @@
+:root {
+  --border-color: #bbbbbb;
+  --foreground: #222;
+  --primary: rgb(16, 103, 124);
+}
+
+body {
+  font-family: sans-serif;
+  font-size: 1em;
+}
+
+.theme {
+  color: #111;
+  background-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --border-color: #636363;
+    --foreground: #eee;
+  }
+
+  .theme {
+    color: #eee;
+    background-color: #222222;
+  }
+}
+
+#data-container {
+  width: 360px;
+  margin: 10vh auto;
+}
+
+.app {
+  padding: 4px 12px;
+
+  p {
+    margin: 4px 0;
+    padding: 0;
+    opacity: 0.85;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1em;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+}
+
+progress {
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+#grid {
+  display: grid;
+  margin-top: 3px;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 6px;
+}
+
+.badge, .badge-empty {
+  background-color: teal;
+  color: white;
+  text-align: center;
+  border-radius: 4px;
+  padding: 2px 3px;
+}
+
+.badge-empty {
+  background-color: #525252;
+}
+
+button,
+*[role="button"] {
+  margin: 0 auto;
+  margin-top: 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.14);
+  display: block;
+  padding: 10px 22px;
+  border: none;
+  background-color: teal;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+    filter: brightness(0.92);
+  }
+}
+
+.last-updated {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+  margin-bottom: 18px;
+}
+
+.error {
+  color: rgb(212, 78, 55);
+}
+
+form {
+  margin: 10vh auto;
+  width: fit-content;
+}
+
+input {
+  padding: 7px 4px;
+  background-color: transparent;
+  color: #eee;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  outline: none;
+
+  &:focus,
+  &:active {
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+}
+
+input[type="submit"] {
+  background-color: rgb(16, 103, 124);
+  padding: 6px 20px;
+  border: 1px solid var(--primary);
+  cursor: pointer;
+  color: var(--foreground);
+}

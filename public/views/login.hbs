@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="main.css">
+  <title>Login</title>
+</head>
+
+<body class="theme">
+  <form onsubmit="submit(event); return false">
+    <input type="text" name="email" placeholder="Usuário" />
+    <input type="password" name="password" placeholder="Senha" />
+    <input type="submit" value="Enviar" />
+  </form>
+  <script>
+    const form = document.querySelector('form')
+
+    form.onsubmit = function (e) {
+      e.preventDefault()
+
+      const email = form?.[0]?.value ?? ""
+      const password = form?.[1]?.value ?? ""
+
+      if (email && password) {
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        }).then(async function (res) {
+          const data = await res.json()
+
+          if (res.status == 200) {
+            window.location.reload()
+          } else {
+            alert(data?.error)
+          }
+        })
+      }
+    }
+  </script>
+</body>
+
+</html>
