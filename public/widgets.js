@@ -1,3 +1,16 @@
+function renderKeyValue(k, v) {
+  const container = document.createElement("p")
+  const key = document.createElement("strong")
+  const value = document.createElement("span")
+
+  key.textContent = `${k}: `
+  value.textContent = v
+
+  container.appendChild(key)
+  container.appendChild(value)
+  return container
+}
+
 function renderBadges(k, itens) {
   const container = document.createElement("div")
   const badges = document.createElement("div")
@@ -24,19 +37,6 @@ function renderBadges(k, itens) {
 
   container.appendChild(badges)
   return container
-}
-
-function renderKeyValue(k, v) {
-  const instance = document.createElement("p")
-  const key = document.createElement("strong")
-  const value = document.createElement("span")
-
-  key.textContent = `${k}: `
-  value.textContent = v
-
-  instance.appendChild(key)
-  instance.appendChild(value)
-  return instance
 }
 
 function renderProgress(k, percentage, current, max) {
