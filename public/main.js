@@ -34,6 +34,7 @@ function addDecimalTimeToDate(originalDate, decimal) {
 
 function renderData(serverData) {
   try {
+    dataContainer.innerHTML = ""
     console.log(serverData.dados)
 
     const data = serverData.dados
@@ -57,3 +58,14 @@ function renderData(serverData) {
     console.error(err)
   }
 }
+
+function getData() {
+  setInterval(() => {
+    fetch("/data")
+      .then(res => res.json())
+      .then(async ({ data }) => renderData(data))
+      .catch(console.error)
+  }, 60_000)
+}
+
+getData()

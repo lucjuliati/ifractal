@@ -4,41 +4,6 @@ const isSecure = process.env.NODE_ENV === "production"
 const baseUrl = "https://stou.ifractal.com.br/fulltime"
 
 class AppController {
-  async index(req, res) {
-    if (req.cookies?.session) {
-      fetch(baseUrl + "/db/estrutura.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cookie": `STOU_Sistemas=${req.cookies.session}`
-        },
-        body: new URLSearchParams({
-          cmd: "getDadosDashboardPrincipal",
-          sistema: "ifponto",
-          k: "VEooMo4B0BbPpgcq0ajJ/5Gaft9t6S3lHOSMdazUhLE="
-        })
-      }).then(async (data) => {
-        const response = await data.text()
-        let json = {}
-
-        if (response.includes("<html>")) {
-          res.clearCookie("session", {
-            httpOnly: true,
-            secure: isSecure,
-          })
-
-          return res.render("login")
-        } else {
-          json = JSON.parse(response)
-        }
-
-        return res.render("home", { data: JSON.stringify(json?.colab?.centro1) })
-      }).catch(console.error)
-    } else {
-      return res.render("login")
-    }
-  }
-
   async login(req, res) {
     if (Buffer.isBuffer(req.body)) {
       req.body = JSON.parse(req.body)
@@ -77,6 +42,78 @@ class AppController {
       console.error(err)
       res.status(400).json({ error: "Credenciais Inválidos!" })
     })
+  }
+
+  async index(req, res) {
+    if (req.cookies?.session) {
+      fetch(baseUrl + "/db/estrutura.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Cookie": `STOU_Sistemas=${req.cookies.session}`
+        },
+        body: new URLSearchParams({
+          cmd: "getDadosDashboardPrincipal",
+          sistema: "ifponto",
+          k: "VEooMo4B0BbPpgcq0ajJ/5Gaft9t6S3lHOSMdazUhLE="
+        })
+      }).then(async (data) => {
+        const response = await data.text()
+        let json = {}
+
+        if (response.includes("<html>")) {
+          res.clearCookie("session", {
+            httpOnly: true,
+            secure: isSecure,
+          })
+
+          return res.render("login")
+        } else {
+          json = JSON.parse(response)
+        }
+
+        return res.render("home", { data: JSON.stringify(json?.colab?.centro1) })
+      }).catch(console.error)
+    } else {
+      return res.render("login")
+    }
+  }
+
+  async data(req, res) {
+    if (req.cookies?.session) {
+      fetch(baseUrl + "/db/estrutura.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Cookie": `STOU_Sistemas=${req.cookies.session}`
+        },
+        body: new URLSearchParams({
+          cmd: "getDadosDashboardPrincipal",
+          sistema: "ifponto",
+          k: "VEooMo4B0BbPpgcq0ajJ/5Gaft9t6S3lHOSMdazUhLE="
+        })
+      }).then(async (data) => {
+        const response = await data.text()
+        let json = {}
+
+        if (response.includes("<html>")) {
+          res.clearCookie("session", {
+            httpOnly: true,
+            secure: isSecure,
+          })
+
+          return res.render("login")
+        } else {
+          json = JSON.parse(response)
+        }
+
+        return res.status(200).json({
+          data: json?.colab?.centro1
+        })
+      }).catch(console.error)
+    } else {
+      return res.status(400).send()
+    }
   }
 }
 
