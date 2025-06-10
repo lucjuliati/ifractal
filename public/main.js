@@ -39,7 +39,7 @@ function renderData(serverData) {
 
     const data = serverData.dados
     const lastUpdated = new Date().toLocaleString()
-    const timeLeft = data.previsto - data.trabalhado
+    let timeLeft = data.previsto - data.trabalhado
 
     if (timeLeft < 0) timeLeft = 0
 
