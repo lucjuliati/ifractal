@@ -40,7 +40,7 @@ class AppController {
       }
     }).catch((err) => {
       console.error(err)
-      res.status(400).json({ error: "Credenciais Inválidos!" })
+      res.status(400).json({ error: "Usuário ou senha incorretos!" })
     })
   }
 

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <title>Login</title>
 </head>
@@ -13,34 +14,13 @@
     <input type="password" name="password" placeholder="Senha" />
     <input type="submit" value="Acessar" />
   </form>
-  <script>
-    const form = document.querySelector('form')
 
-    form.onsubmit = function (e) {
-      e.preventDefault()
+  <dialog id="modal">
+    <p id="modal-content"></p>
+    <button style="background-color: transparent;" onclick="closeModal()">Fechar</button>
+  </dialog>
 
-      const email = form?.[0]?.value ?? ""
-      const password = form?.[1]?.value ?? ""
-
-      if (email && password) {
-        fetch('/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        }).then(async function (res) {
-          const data = await res.json()
-
-          if (res.status == 200) {
-            window.location.reload()
-          } else {
-            alert(data?.error)
-          }
-        })
-      }
-    }
-  </script>
+  <script src="scripts/login.js"></script>
 </body>
 
 </html>

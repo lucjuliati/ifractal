@@ -2,11 +2,17 @@
   --border-color: #bbbbbb;
   --foreground: #222;
   --primary: rgb(17, 113, 130);
+  --bg: #ffffff;
 }
 
 body {
   font-family: sans-serif;
   font-size: 1em;
+}
+
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0.75;
 }
 
 .theme {
@@ -18,18 +24,20 @@ body {
   :root {
     --border-color: #636363;
     --foreground: #eee;
+    --bg: #222222;
   }
 
   .theme {
     color: #eee;
-    background-color: #222222;
+    background-color: var(--bg);
   }
 }
 
 #data-container {
   width: 360px;
   margin: 10vh auto;
-  min-height: 214px;
+  margin-bottom: 5vh;
+  min-height: 140px;
 }
 
 .app {
@@ -47,6 +55,12 @@ body {
     text-align: center;
     margin-bottom: 6px;
   }
+
+  a {
+    margin: 0 auto;
+    display: block;
+    width: fit-content;
+  }
 }
 
 progress {
@@ -62,7 +76,8 @@ progress {
   gap: 0 6px;
 }
 
-.badge, .badge-empty {
+.badge,
+.badge-empty {
   background-color: var(--primary);
   color: white;
   text-align: center;
@@ -138,4 +153,18 @@ input[type="submit"] {
 
 a:has(button) {
   text-decoration: none;
+}
+
+#modal {
+  outline: none;
+  width: 240px;
+  background-color: var(--bg);
+  border: 1px solid var(--border-color);
+  color: var(--foreground);
+  border-radius: 4px;
+
+  #modal-content {
+    text-align: center;
+    color: rgb(223, 69, 69);
+  }
 }
