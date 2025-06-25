@@ -126,6 +126,13 @@ button,
 form {
   margin: 10vh auto;
   width: fit-content;
+  display: flex;
+
+  input[type="submit"] {
+    /* margin: 0 auto; */
+    display: block;
+    margin-left: 10px;
+  }
 }
 
 input {
@@ -166,5 +173,41 @@ a:has(button) {
   #modal-content {
     text-align: center;
     color: rgb(223, 69, 69);
+  }
+}
+
+@media screen and (max-width: 780px) {
+  body {
+    font-family: sans-serif;
+    font-size: 1em;
+  }
+
+  button {
+    font-size: 1em;
+  }
+
+  input {
+    padding: 10px 6px;
+    font-size: 1em;
+    width: 100%;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 64px);
+    padding: 5vh 32px;
+
+    input {
+      margin-top: 10px;
+    }
+
+    input[type="submit"] {
+      margin: 0;
+      margin-top: 10px;
+      padding: 10px 8px;
+      font-weight: bold;
+      font-size: 1.09em;
+    }
   }
 }
