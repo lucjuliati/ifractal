@@ -52,6 +52,27 @@ function renderProgress(k, percentage, current, max) {
   return container
 }
 
+function lunchBreakSelect(k, value, onChange) {
+  const container = document.createElement("select")
+  const label = document.createElement("label")
+
+  for (let i = 1; i <= 2; i++) {
+    const option = document.createElement("option")
+    option.setAttribute("value", i)
+    option.textContent = i == 1 ? `${i} Hora` : `${i} Horas`
+    container.appendChild(option)
+  }
+
+  container.value = value ?? 1
+  container.setAttribute("id", "lunch-break")
+  container.addEventListener("change", onChange)
+  container.style.marginLeft = "10px"
+  label.setAttribute("style", "font-weight: bold; color: #d2d2d2;")
+  label.textContent = k
+  label.appendChild(container)
+  return label
+}
+
 function renderDate(k, date) {
   const container = document.createElement("div")
   container.setAttribute("class", "last-updated")
