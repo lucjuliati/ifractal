@@ -8,7 +8,20 @@
 
 <body class="theme">
   <div class="app">
+    <label>
+      Consultar data
+      <input type="date" id="date-picker" max="2025-08-24">
+    </label>
+
     <div id="data-container"></div>
+
+    <dialog id="modal">
+      <div class="modal-content">
+      </div>
+      <form method="dialog">
+        <button>OK</button>
+      </form>
+    </dialog>
 
     <a href="https://stou.ifractal.com.br/fulltime/phonto.php" target="_blank" rel="noopener noreferrer">
       <button>Bater ponto</button>
@@ -16,6 +29,7 @@
 
     <script src="scripts/widgets.js"></script>
     <script src="scripts/main.js"></script>
+    <script src="scripts/report.js"></script>
     <script>
       renderData({{{ data }}})
     </script>

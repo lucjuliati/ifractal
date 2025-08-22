@@ -1,7 +1,7 @@
+import { baseUrl } from "../utils/config.js"
 import parseCookie from "../utils/parseCookie.js"
 
 const isSecure = process.env.NODE_ENV === "production"
-const baseUrl = "https://stou.ifractal.com.br/fulltime"
 
 class AppController {
   async login(req, res) {
