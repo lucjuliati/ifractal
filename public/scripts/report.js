@@ -2,6 +2,9 @@ const dialog = document.querySelector("#modal")
 const modalContent = document.querySelector("#modal div.modal-content")
 const datePicker = document.querySelector("#date-picker")
 
+const previousBtn = document.querySelector("#previous")
+const nextBtn = document.querySelector("#next")
+
 async function getReport(e) {
   if (!e.target.value) return
 
@@ -19,7 +22,7 @@ async function getReport(e) {
     const data = await res.json()
 
     const itens = [
-      renderKeyValue("Total", data?.totalWorkedTime),
+      data.mcs?.length === 4 ? renderKeyValue("Total", data?.totalWorkedTime) : null,
       renderKeyValue("Data", data.str_data),
       renderBadges("Períodos", data.mcs),
     ].filter(item => item !== null)
@@ -28,13 +31,36 @@ async function getReport(e) {
   })
 }
 
+const handleNavigation = (e, direction) => {
+  const now = new Date().toISOString().substr(0, 10)
+
+  if (datePicker.value == now && direction == ">") {
+    e.preventDefault()
+    return
+  }
+
+  if (direction == "<") {
+    let date = new Date(datePicker.value)
+    date.setDate(date.getDate() - 1)
+    datePicker.value = date.toISOString().split("T")[0]
+  } else {
+
+    let date = new Date(datePicker.value)
+    date.setDate(date.getDate() + 1)
+    datePicker.value = date.toISOString().split("T")[0]
+  }
+
+  datePicker.dispatchEvent(new Event("change", { bubbles: true }))
+}
+
 try {
-  let max = new Date().setDate(new Date().getDate() - 1)
-  max = new Date(max).toISOString().split("T")[0]
+  const max = new Date().toISOString().split("T")[0]
 
   datePicker.setAttribute("max", max)
   datePicker.addEventListener("change", getReport)
-
 } catch (err) {
   console.error(err)
 }
+
+previousBtn.addEventListener("click", (e) => handleNavigation(e, "<"))
+nextBtn.addEventListener("click", (e) => handleNavigation(e, ">"))

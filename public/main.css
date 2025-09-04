@@ -7,7 +7,11 @@
 
 body {
   font-family: sans-serif;
-  font-size: 1em;
+  font-size: 0.875em;
+}
+
+button, input {
+  font-size: 0.9em;
 }
 
 ::backdrop {
@@ -164,7 +168,6 @@ a:has(button) {
 
 #modal {
   outline: none;
-  width: 240px;
   background-color: var(--bg);
   border: 1px solid var(--border-color);
   color: var(--foreground);
@@ -173,6 +176,22 @@ a:has(button) {
   #modal-content {
     text-align: center;
     color: rgb(223, 69, 69);
+  }
+
+  .navigation {
+    display: flex;
+    width: 400px;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    button {
+      margin: 0;
+      user-select: none;
+      box-shadow: none;
+      background-color: rgba(88, 88, 88, 0.3) !important;
+      border: none !important;
+      padding: 8px 18px !important;
+    }
   }
 }
 
@@ -186,9 +205,10 @@ dialog {
   border-radius: 4px;
   border: 1px solid #424242;
   width: 400px !important;
+  height: fit-content;
   position: relative;
   z-index: 100 !important;
-  min-height: 148px;
+  min-height: 190px;
 
   & form {
     margin: 0;
@@ -211,9 +231,10 @@ label:has(*[id="date-picker"]) {
   width: 360px;
   margin: 10vh auto;
   display: flex;
+  color: #868686;
   flex-direction: column;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 @media screen and (max-width: 780px) {
