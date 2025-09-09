@@ -10,7 +10,8 @@ body {
   font-size: 0.875em;
 }
 
-button, input {
+button,
+input {
   font-size: 0.9em;
 }
 
@@ -235,6 +236,28 @@ label:has(*[id="date-picker"]) {
   flex-direction: column;
   text-align: center;
   margin-bottom: 8px;
+}
+
+#work-week {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 360px;
+  margin-top: 22px;
+
+  thead th {
+    font-size: 13px !important;
+    font-weight: normal;
+    text-align: left;
+    padding: 1px 12px;
+  }
+
+  tbody td {
+    padding: 1px 12px;
+    font-size: 14px;
+    font-weight: 100;
+  }
 }
 
 @media screen and (max-width: 780px) {

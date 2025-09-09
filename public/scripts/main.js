@@ -18,7 +18,6 @@ function handleLunchBreak(e) {
 function renderData(serverData) {
   try {
     dataContainer.innerHTML = ""
-    console.log(serverData.dados)
 
     const data = serverData.dados
     const lastUpdated = new Date().toLocaleString()
@@ -43,6 +42,8 @@ function renderData(serverData) {
       renderBadges("Períodos", data.mcs),
       renderDate("Atualizado em", lastUpdated)
     ].filter(item => item !== null)
+
+    renderWorkWeek(serverData.workWeek)
 
     itens.forEach(item => dataContainer.appendChild(item))
   } catch (err) {

@@ -1,7 +1,6 @@
 const dialog = document.querySelector("#modal")
 const modalContent = document.querySelector("#modal div.modal-content")
 const datePicker = document.querySelector("#date-picker")
-
 const previousBtn = document.querySelector("#previous")
 const nextBtn = document.querySelector("#next")
 
@@ -32,7 +31,7 @@ async function getReport(e) {
 }
 
 const handleNavigation = (e, direction) => {
-  const now = new Date().toISOString().substr(0, 10)
+  const now = new Date().toISOString().substring(0, 10)
 
   if (datePicker.value == now && direction == ">") {
     e.preventDefault()

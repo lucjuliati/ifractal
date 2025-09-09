@@ -111,3 +111,58 @@ function addDecimalTimeToDate(originalDate, decimal) {
 
   return `${hrs}:${mins < 10 ? "0" + mins : mins}`
 }
+
+function renderWorkWeek(week) {
+  try {
+    const container = document.querySelector("#work-week")
+    const table = document.createElement("table")
+    const thead = document.createElement("thead")
+    const tbody = document.createElement("tbody")
+    const total = document.createElement("span")
+
+    thead.innerHTML = `
+      <tr>
+        <th>Dia</th>
+        <th>Data</th>
+        <th>Total</th>
+      </tr>
+    `
+
+    table.appendChild(thead)
+
+    if (week?.data) {
+      Object.keys(week.data).forEach(key => {
+        const tr = document.createElement("tr")
+        tr.setAttribute("style", "opacity: 0.75;")
+
+        const date = new Date(`${key} 12:00:00`).toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        })
+
+        const part1 = date.split(",")[0]
+        const part2 = date.split(",")[1]
+
+        tr.innerHTML = `
+          <td>${part1}</td>
+          <td>${part2}</td>
+          <td>${week.data[key]?.formatted}</td>
+        `
+
+        tbody.appendChild(tr)
+      })
+
+      table.appendChild(tbody)
+      container.appendChild(table)
+
+      total.style.marginTop = "4px"
+      total.style.textAlign = "center"
+      total.style.color = week.total.startsWith("-") ? "#e16049ff" : "#23774aff"
+      total.textContent = `Total: ${week.total}`
+      container.appendChild(total)
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}

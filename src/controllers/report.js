@@ -3,14 +3,26 @@ import { differenceInMinutes } from "date-fns"
 
 const isSecure = process.env.NODE_ENV === "production"
 
-class ReportController {
-  decimalToTime = (decimal) => {
-    const hours = Math.floor(decimal)
-    const minutes = Math.round((decimal - hours) * 60)
+export function calculateWorkedTime(date, mcs, format = true) {
+  if (mcs.length !== 4) return
 
+  let timestamps = mcs?.map(time => `${date} ${time}`)
+
+  const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
+  const difference2 = differenceInMinutes(timestamps[3], timestamps[2]) / 60
+  const total = difference1 + difference2
+
+  const hours = Math.floor(total)
+  const minutes = Math.round((total - hours) * 60)
+
+  if (format) {
     return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
+  } else {
+    return total.toFixed(2)
   }
+}
 
+class ReportController {
   decimalToTimeFormatted = (decimal) => {
     const hours = Math.floor(decimal)
     const minutes = Math.round((decimal - hours) * 60)
@@ -57,17 +69,7 @@ class ReportController {
         json = JSON.parse(response)
         const mcs = json?.ponto_resumo_dia?.mcs ?? []
 
-        if (mcs.length === 4) {
-          let timestamps = mcs?.map(time => {
-            return `${date} ${time}`
-          })
-
-          const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
-          const difference2 = differenceInMinutes(timestamps[3], timestamps[2]) / 60
-          const total = difference1 + difference2
-
-          json.ponto_resumo_dia.totalWorkedTime = this.decimalToTime(total)
-        }
+        json.ponto_resumo_dia.totalWorkedTime = calculateWorkedTime(date, mcs)
       }
 
       return res.status(200).json(json.ponto_resumo_dia)
