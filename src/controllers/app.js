@@ -47,8 +47,6 @@ class AppController {
   }
 
   async index(req, res) {
-      res.clearCookie("work_week", { httpOnly: false, secure: isSecure })
-
     if (req.cookies?.session) {
       fetch(baseUrl + "/db/estrutura.php", {
         method: "POST",
@@ -76,8 +74,8 @@ class AppController {
           json = JSON.parse(text)
         }
 
-        const workWeek = await handleWorkWeek(req, res)
-        const data = JSON.stringify({ ...json?.colab?.centro1, workWeek })
+        // const workWeek = await handleWorkWeek(req, res)
+        const data = JSON.stringify({ ...json?.colab?.centro1 })
         return res.render("home", { data })
       }).catch(console.error)
     } else {
@@ -129,8 +127,7 @@ async function handleWorkWeek(req, res) {
     let canFetch = false
 
     function generateWeek() {
-      const today = new Date("2025-09-04")
-      // const today = new Date()
+      const today = new Date()
       const monday = startOfWeek(today, { weekStartsOn: 1 })
       let week = {}
 
@@ -140,7 +137,7 @@ async function handleWorkWeek(req, res) {
 
         week[date] = {
           date,
-          isFuture: isFuture(day),
+          isFuture: isFuture(`${day} 23:59:59`),
         }
       })
 
@@ -172,7 +169,7 @@ async function handleWorkWeek(req, res) {
 
     if (!canFetch && req.cookies?.work_week) {
       return JSON.parse(req.cookies.work_week)
-    }
+    } 
 
     for (const date in workWeek) {
       let fetchDate = new Date(date)
@@ -199,6 +196,10 @@ async function handleWorkWeek(req, res) {
       }
     }
 
+    Object.keys(workWeek).forEach(day => {
+      days[day] = { ...workWeek[day], formatted: null, total: 0 }
+    })
+
     await Promise.all(requests).then(async (responses) => {
       for (let i = 0; i < responses.length; i++) {
         const response = await responses[i].text()
@@ -210,10 +211,14 @@ async function handleWorkWeek(req, res) {
 
         days[day.date] = { ...day, formatted, total: workedTime }
 
-        total += (parseFloat(workedTime) - 8)
+        if (!isNaN((parseFloat(workedTime) - 8))) {
+          total += (parseFloat(workedTime) - 8)
+        } else {
+          total += 8
+        }
       }
     })
-    
+
     const sign = total < 0 ? "-" : ""
     const abs = Math.abs(total)
 
@@ -226,7 +231,7 @@ async function handleWorkWeek(req, res) {
       await res.cookie("work_week", JSON.stringify(data), {
         httpOnly: false,
         secure: isSecure,
-        maxAge: 7 * (24 * 60 * 60 * 1000)
+        maxAge: (24 * 60 * 60 * 1000)
       })
     } else {
       res.clearCookie("work_week", { httpOnly: false, secure: isSecure })

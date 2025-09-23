@@ -43,7 +43,7 @@ function renderData(serverData) {
       renderDate("Atualizado em", lastUpdated)
     ].filter(item => item !== null)
 
-    renderWorkWeek(serverData.workWeek)
+    // renderWorkWeek(serverData.workWeek)
 
     itens.forEach(item => dataContainer.appendChild(item))
   } catch (err) {

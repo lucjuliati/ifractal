@@ -147,7 +147,7 @@ function renderWorkWeek(week) {
         tr.innerHTML = `
           <td>${part1}</td>
           <td>${part2}</td>
-          <td>${week.data[key]?.formatted}</td>
+          <td>${week.data[key]?.formatted ?? "---"}</td>
         `
 
         tbody.appendChild(tr)
