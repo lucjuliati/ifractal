@@ -260,6 +260,14 @@ label:has(*[id="date-picker"]) {
   }
 }
 
+input[type="date"] {
+  font-size: 1.1em;
+}
+
+button {
+  font-size: 0.85em;
+}
+
 @media screen and (max-width: 780px) {
   body {
     font-family: sans-serif;
@@ -293,5 +301,21 @@ label:has(*[id="date-picker"]) {
       font-weight: bold;
       font-size: 1.09em;
     }
+  }
+}
+
+table {
+  margin: 0 auto;
+  margin-top: 25px;
+  padding-bottom: 40px;
+
+  thead tr {
+    opacity: 0.65;
+  }
+
+  td {
+    font-size: 0.9em !important;
+    opacity: 0.9;
+    padding: 1px 12px;
   }
 }

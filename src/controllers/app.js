@@ -1,4 +1,4 @@
-import { addDays, isFuture, startOfWeek } from "date-fns"
+import { isFuture, isWeekend, subDays } from "date-fns"
 import parseCookie from "../utils/parseCookie.js"
 import { calculateWorkedTime } from "./report.js"
 import { baseUrl } from "../utils/config.js"
@@ -74,8 +74,8 @@ class AppController {
           json = JSON.parse(text)
         }
 
-        // const workWeek = await handleWorkWeek(req, res)
-        const data = JSON.stringify({ ...json?.colab?.centro1 })
+        const lastWeek = await handleLastWeek(req, res)
+        const data = JSON.stringify({ ...json?.colab?.centro1, lastWeek })
         return res.render("home", { data })
       }).catch(console.error)
     } else {
@@ -121,30 +121,24 @@ class AppController {
   }
 }
 
-async function handleWorkWeek(req, res) {
+async function handleLastWeek(req, res) {
   try {
     let data = null
     let canFetch = false
+    let lastWeek = {}
 
-    function generateWeek() {
-      const today = new Date()
-      const monday = startOfWeek(today, { weekStartsOn: 1 })
-      let week = {}
+    Array.from({ length: 12 }).reverse().forEach((_, i) => {
+      const day = subDays(new Date(), i)
+      const date = day.toISOString().split("T")[0]
 
-      Array.from({ length: 5 }, (_, i) => {
-        const day = addDays(monday, i)
-        const date = day.toISOString().split("T")[0]
-
-        week[date] = {
+      if (Object.keys(lastWeek).length < 7 && !isWeekend(day)) {
+        lastWeek[date] = {
           date,
           isFuture: isFuture(`${day} 23:59:59`),
         }
-      })
+      }
+    })
 
-      return week
-    }
-
-    const workWeek = generateWeek()
     const days = {}
     const requests = []
     let total = 0
@@ -158,8 +152,8 @@ async function handleWorkWeek(req, res) {
         return `${cookieWeek[key].date}${cookieWeek[key].isFuture ? "f" : "p"}`
       }).join("|")
 
-      const keys = Object.keys(workWeek).map(key => {
-        return `${workWeek[key].date}${workWeek[key].isFuture ? "f" : "p"}`
+      const keys = Object.keys(lastWeek).map(key => {
+        return `${lastWeek[key].date}${lastWeek[key].isFuture ? "f" : "p"}`
       }).join("|")
 
       if (cachedKeys !== keys) {
@@ -169,14 +163,14 @@ async function handleWorkWeek(req, res) {
 
     if (!canFetch && req.cookies?.work_week) {
       return JSON.parse(req.cookies.work_week)
-    } 
+    }
 
-    for (const date in workWeek) {
+    for (const date in lastWeek) {
       let fetchDate = new Date(date)
       fetchDate.setDate(fetchDate.getDate() - 1)
       fetchDate = fetchDate.toISOString().split("T")[0]
 
-      if (workWeek[date].isFuture === false) {
+      if (lastWeek[date].isFuture === false) {
         requests.push(
           fetch(baseUrl + "/db/estrutura.php", {
             method: "POST",
@@ -196,8 +190,8 @@ async function handleWorkWeek(req, res) {
       }
     }
 
-    Object.keys(workWeek).forEach(day => {
-      days[day] = { ...workWeek[day], formatted: null, total: 0 }
+    Object.keys(lastWeek).forEach(day => {
+      days[day] = { ...lastWeek[day], formatted: null, total: 0 }
     })
 
     await Promise.all(requests).then(async (responses) => {
@@ -205,9 +199,9 @@ async function handleWorkWeek(req, res) {
         const response = await responses[i].text()
         const json = JSON.parse(response)
         const mcs = json?.ponto_resumo_dia?.mcs ?? []
-        const workedTime = calculateWorkedTime(Object.keys(workWeek)[i], mcs, false)
-        const formatted = calculateWorkedTime(Object.keys(workWeek)[i], mcs)
-        const day = workWeek[Object.keys(workWeek)[i]]
+        const workedTime = calculateWorkedTime(Object.keys(lastWeek)[i], mcs, false)
+        const formatted = calculateWorkedTime(Object.keys(lastWeek)[i], mcs)
+        const day = lastWeek[Object.keys(lastWeek)[i]]
 
         days[day.date] = { ...day, formatted, total: workedTime }
 
