@@ -304,10 +304,32 @@ button {
   }
 }
 
+#last-week {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 40px;
+  width: 360px;
+  margin: 0 auto;
+
+  &::before {
+    content: "(Últimos 7 dias úteis)";
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 20px;
+    margin-bottom: 5px;
+  }
+
+  span {
+    margin-top: 4px;
+    font-weight: bold;
+    text-align: center;
+  }
+}
+
 table {
   margin: 0 auto;
-  margin-top: 25px;
-  padding-bottom: 40px;
 
   thead tr {
     opacity: 0.65;

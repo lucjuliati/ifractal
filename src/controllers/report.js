@@ -10,7 +10,7 @@ export function calculateWorkedTime(date, mcs, format = true) {
   let total = 0
 
   if (mcs.length === 1) {
-    const now = `${date} ${new Date().toLocaleTimeString("pt-BR").substring(0, 5)}`
+    const now = `${date} ${new Date().toLocaleTimeString().substring(0, 5)}`
     total = Math.abs(differenceInMinutes(now, timestamps[0]) / 60)
 
     hours = Math.floor(total)
@@ -21,7 +21,7 @@ export function calculateWorkedTime(date, mcs, format = true) {
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
   } else if (mcs.length === 3) {
-    const now = `${date} ${new Date().toLocaleTimeString("pt-BR").substring(0, 5)}`
+    const now = `${date} ${new Date().toLocaleTimeString().substring(0, 5)}`
     const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
     const difference2 = differenceInMinutes(now, timestamps[2]) / 60
     total = difference1 + difference2

@@ -94,15 +94,9 @@ function addDecimalTimeToDate(originalDate, decimal) {
 
   const hours = Math.floor(decimal)
   const minutes = Math.round((decimal - hours) * 60)
-
-  const MS_PER_SECOND = 1000
-  const SECONDS_PER_MINUTE = 60
-  const MINUTES_PER_HOUR = 60
-
   const newDate = new Date(originalDate.getTime())
-
-  const hoursInMs = hours * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND
-  const minutesInMs = minutes * SECONDS_PER_MINUTE * MS_PER_SECOND
+  const hoursInMs = hours * 60 * 60 * 1000
+  const minutesInMs = minutes * 60 * 1000
 
   newDate.setTime(newDate.getTime() + (hoursInMs + minutesInMs))
 
@@ -115,7 +109,7 @@ function addDecimalTimeToDate(originalDate, decimal) {
 function renderWorkWeek(week) {
   try {
     const container = document.querySelector("#last-week")
-    console.log(week)
+
     const table = document.createElement("table")
     const thead = document.createElement("thead")
     const tbody = document.createElement("tbody")
@@ -149,18 +143,15 @@ function renderWorkWeek(week) {
           <td>${part2}</td>
           <td>${week.data[key]?.formatted ?? "---"}</td>
         `
-
         tbody.appendChild(tr)
       })
 
       table.appendChild(tbody)
       container.appendChild(table)
 
-      // total.style.marginTop = "4px"
-      // total.style.textAlign = "center"
-      // total.style.color = week.total.startsWith("-") ? "#e16049ff" : "#23774aff"
-      // total.textContent = `Total: ${week.total}`
-      // container.appendChild(total)
+      total.style.color = week.total.startsWith("-") ? "#fc7158ff" : "#3ac363ff"
+      total.textContent = `Total: ${week.total}`
+      container.appendChild(total)
     }
   } catch (err) {
     console.error(err)
