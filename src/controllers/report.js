@@ -47,6 +47,11 @@ export function calculateWorkedTime(date, mcs, format = true) {
     if (hours.toString() == "NaN" || minutes.toString() == "NaN") {
       return null
     }
+
+    if (hours.toString().includes("-")) {
+      hours = hours.toString().replace("-", "")
+    }
+    
     return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
   } else {
     return Math.abs(total).toFixed(2)
