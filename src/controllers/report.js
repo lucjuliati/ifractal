@@ -28,6 +28,7 @@ export function calculateWorkedTime(date, mcs, format = true) {
     }).substring(0, 5)}`
     const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
     const difference2 = differenceInMinutes(now, timestamps[2]) / 60
+
     total = difference1 + difference2
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
@@ -38,6 +39,7 @@ export function calculateWorkedTime(date, mcs, format = true) {
 
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
+    minutes = Math.abs(minutes)
   }
 
   if (format) {

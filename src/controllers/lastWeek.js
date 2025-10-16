@@ -97,7 +97,7 @@ export async function handleLastWeek(req, res) {
       await res.cookie("last_week", JSON.stringify(data), {
         httpOnly: false,
         secure: isSecure,
-        maxAge: 180
+        maxAge: 300
       })
     } else {
       res.clearCookie("last_week", { httpOnly: false, secure: isSecure })
