@@ -45,7 +45,7 @@ export function calculateWorkedTime(date, mcs, format = true) {
   if (format) {
     return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
   } else {
-    return total.toFixed(2)
+    return Math.abs(total).toFixed(2)
   }
 }
 
