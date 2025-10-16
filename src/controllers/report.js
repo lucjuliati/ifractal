@@ -8,7 +8,7 @@ export function calculateWorkedTime(date, mcs, format = true) {
   let hours = 0
   let minutes = 0
   let total = 0
-  
+
   if (mcs.length === 1) {
     const now = `${date} ${new Date().toLocaleTimeString([], {
       timeZone: "America/Sao_Paulo"
@@ -40,9 +40,13 @@ export function calculateWorkedTime(date, mcs, format = true) {
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
     minutes = Math.abs(minutes)
+    hours = Math.abs(hours)
   }
 
   if (format) {
+    if (hours.toString() == "NaN" || minutes.toString() == "NaN") {
+      return null
+    }
     return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
   } else {
     return Math.abs(total).toFixed(2)
