@@ -75,7 +75,7 @@ export async function handleLastWeek(req, res) {
 
         days[day.date] = { ...day, formatted, total: workedTime }
 
-        if (i > 0) {
+        if (i > 0 && !isNaN(workedTime)) {
           if (!isNaN((parseFloat(workedTime) - 8))) {
             total += (parseFloat(workedTime) - 8)
           } else {
