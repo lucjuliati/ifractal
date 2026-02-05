@@ -1,7 +1,8 @@
 
 import parseCookie from "../utils/parseCookie.js"
 import { baseUrl } from "../utils/config.js"
-import { handleLastWeek } from "./lastWeek.js"
+import { handleLastWeek, getStoredDates } from "./lastWeek.js"
+import { getToken } from "../utils/getToken.js"
 
 const isSecure = process.env.NODE_ENV === "production"
 
@@ -13,7 +14,7 @@ class AppController {
 
     const body = new URLSearchParams({
       primeiro_login: true,
-      login: req.body.email,
+      login: req.body.login,
       senha: req.body.password
     })
 
@@ -26,8 +27,9 @@ class AppController {
 
         if (json?.success) {
           const cookies = parseCookie(data.headers.getSetCookie())
+          const session = `${cookies["STOU_Sistemas"]}:${req.body.login}`
 
-          res.cookie("session", cookies["STOU_Sistemas"], {
+          res.cookie("session", session, {
             httpOnly: true,
             secure: isSecure,
             maxAge: 24 * 60 * 60 * 1000
@@ -48,11 +50,13 @@ class AppController {
 
   async index(req, res) {
     if (req.cookies?.session) {
+      const { user, token } = getToken(req)
+
       fetch(baseUrl + "/db/estrutura.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Cookie": `STOU_Sistemas=${req.cookies.session}`
+          "Cookie": `STOU_Sistemas=${token}`
         },
         body: new URLSearchParams({
           cmd: "getDadosDashboardPrincipal",
@@ -64,6 +68,8 @@ class AppController {
         let json = {}
 
         if (text.includes("<html")) {
+          req.user = user
+
           res.clearCookie("session", {
             httpOnly: true,
             secure: isSecure,
@@ -75,7 +81,11 @@ class AppController {
         }
 
         const lastWeek = await handleLastWeek(req, res)
-        const data = JSON.stringify({ ...json?.colab?.centro1, lastWeek })
+        const data = JSON.stringify({
+          ...json?.colab?.centro1,
+          stored: (await getStoredDates(req)),
+          lastWeek
+        })
         return res.render("home", { data })
       }).catch(console.error)
     } else {

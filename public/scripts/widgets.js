@@ -106,7 +106,7 @@ function addDecimalTimeToDate(originalDate, decimal) {
   return `${hrs}:${mins < 10 ? "0" + mins : mins}`
 }
 
-function renderWorkWeek(week) {
+function renderWorkWeek(timeframe) {
   try {
     const container = document.querySelector("#last-week")
 
@@ -125,11 +125,11 @@ function renderWorkWeek(week) {
 
     table.appendChild(thead)
 
-    if (week?.data) {
-      Object.keys(week.data).forEach(key => {
+    if (timeframe?.data) {
+      Object.keys(timeframe.data).forEach(key => {
         const tr = document.createElement("tr")
 
-        const date = new Date(`${key} 12:00:00`).toLocaleDateString("pt-BR", {
+        const date = new Date(timeframe.data[key]?.date).toLocaleDateString("pt-BR", {
           weekday: "long",
           day: "numeric",
           month: "long"
@@ -141,7 +141,7 @@ function renderWorkWeek(week) {
         tr.innerHTML = `
           <td>${part1}</td>
           <td>${part2}</td>
-          <td>${week.data[key]?.formatted ?? "---"}</td>
+          <td>${timeframe.data[key]?.total ?? "---"}</td>
         `
         tbody.appendChild(tr)
       })
@@ -149,8 +149,8 @@ function renderWorkWeek(week) {
       table.appendChild(tbody)
       container.appendChild(table)
 
-      total.style.color = week.total.startsWith("-") ? "#fc7158ff" : "#3ac363ff"
-      total.textContent = `Total: ${week.total}`
+      total.style.color = timeframe.total.startsWith("-") ? "#fc7158ff" : "#3ac363ff"
+      total.textContent = `Total: ${timeframe.total}`
       container.appendChild(total)
     }
   } catch (err) {

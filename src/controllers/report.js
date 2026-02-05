@@ -4,39 +4,38 @@ import { differenceInMinutes } from "date-fns"
 const isSecure = process.env.NODE_ENV === "production"
 
 export function calculateWorkedTime(date, mcs, format = true) {
-  let timestamps = mcs?.map(time => `${date} ${time}`)
+  const myOffset = '-03:00'
+
+  let timestamps = mcs?.map(time => `${date}T${time}:00${myOffset}`)
   let hours = 0
   let minutes = 0
   let total = 0
 
-  if (mcs.length === 1) {
-    const now = `${date} ${new Date().toLocaleTimeString([], {
-      timeZone: "America/Sao_Paulo"
-    }).substring(0, 5)}`
-    total = Math.abs(differenceInMinutes(now, timestamps[0]) / 60)
+  if (mcs.length % 2 !== 0) {
+    const d = new Date()
+    const h = d.toLocaleTimeString('en-GB', { timeZone: 'America/Sao_Paulo', hour: '2-digit' })
+    const m = d.toLocaleTimeString('en-GB', { timeZone: 'America/Sao_Paulo', minute: '2-digit' })
+    const nowTime = `${h}:${m}`
+    const now = `${date}T${nowTime}:00${myOffset}`
 
+    if (mcs.length === 1) {
+      total = Math.abs(differenceInMinutes(now, timestamps[0]) / 60)
+    } else { 
+      const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
+      const difference2 = differenceInMinutes(now, timestamps[2]) / 60
+      total = difference1 + difference2
+    }
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
-  } else if (mcs.length === 2) {
-    const difference = differenceInMinutes(timestamps[1], timestamps[0]) / 60
-    total = difference
-    hours = Math.floor(total)
-    minutes = Math.round((total - hours) * 60)
-  } else if (mcs.length === 3) {
-    const now = `${date} ${new Date().toLocaleTimeString([], {
-      timeZone: "America/Sao_Paulo"
-    }).substring(0, 5)}`
-    const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
-    const difference2 = differenceInMinutes(now, timestamps[2]) / 60
-
-    total = difference1 + difference2
-    hours = Math.floor(total)
-    minutes = Math.round((total - hours) * 60)
-  } else {
-    const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
-    const difference2 = differenceInMinutes(timestamps[3], timestamps[2]) / 60
-    total = difference1 + difference2
-
+  } else if (mcs.length > 0) { 
+    if (mcs.length === 2) {
+      const difference = differenceInMinutes(timestamps[1], timestamps[0]) / 60
+      total = difference
+    } else { 
+      const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
+      const difference2 = differenceInMinutes(timestamps[3], timestamps[2]) / 60
+      total = difference1 + difference2
+    }
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
     minutes = Math.abs(minutes)
@@ -44,14 +43,14 @@ export function calculateWorkedTime(date, mcs, format = true) {
   }
 
   if (format) {
-    if (hours.toString() == "NaN" || minutes.toString() == "NaN") {
+    if (isNaN(hours) || isNaN(minutes)) {
       return null
     }
 
     if (hours.toString().includes("-")) {
       hours = hours.toString().replace("-", "")
     }
-    
+
     return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
   } else {
     return Math.abs(total).toFixed(2)

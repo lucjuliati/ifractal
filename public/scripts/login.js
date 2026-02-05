@@ -5,16 +5,16 @@ const modalContent = document.querySelector("#modal-content")
 form.onsubmit = function (e) {
   e.preventDefault()
 
-  const email = form?.[0]?.value ?? ""
+  const login = form?.[0]?.value ?? ""
   const password = form?.[1]?.value ?? ""
 
-  if (email && password) {
+  if (login && password) {
     fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ login, password })
     }).then(async function (res) {
       const data = await res.json()
 

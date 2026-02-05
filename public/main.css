@@ -304,6 +304,24 @@ button {
   }
 }
 
+details:has(#last-week) {
+  max-width: 360px;
+  margin: 0 auto;
+
+  & > summary {
+    text-align: center;
+    margin-top: 8px;
+    padding: 8px 0;
+    list-style: none;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #353535;
+      cursor: pointer;
+    }
+  }
+}
+
 #last-week {
   display: flex;
   flex-direction: column;
@@ -311,15 +329,6 @@ button {
   padding-bottom: 40px;
   width: 360px;
   margin: 0 auto;
-
-  &::before {
-    content: "(Últimos 7 dias úteis)";
-    text-align: center;
-    font-size: 12px;
-    opacity: 0.5;
-    margin-top: 20px;
-    margin-bottom: 5px;
-  }
 
   span {
     margin-top: 4px;
