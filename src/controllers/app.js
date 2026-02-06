@@ -3,6 +3,7 @@ import parseCookie from "../utils/parseCookie.js"
 import { baseUrl } from "../utils/config.js"
 import { handleLastWeek } from "./lastWeek.js"
 import { getToken } from "../utils/getToken.js"
+import { getStoredDates } from "./lastWeek.js"
 
 const isSecure = process.env.NODE_ENV === "production"
 
@@ -84,6 +85,7 @@ class AppController {
         const data = JSON.stringify({
           ...json?.colab?.centro1,
           user,
+          stored: (await getStoredDates(req)),
           lastWeek
         })
         return res.render("home", { data })
@@ -95,11 +97,13 @@ class AppController {
 
   async data(req, res) {
     if (req.cookies?.session) {
+      const {  token } = getToken(req)
+
       fetch(baseUrl + "/db/estrutura.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Cookie": `STOU_Sistemas=${req.cookies.session}`
+          "Cookie": `STOU_Sistemas=${token}`
         },
         body: new URLSearchParams({
           cmd: "getDadosDashboardPrincipal",

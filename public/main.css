@@ -38,9 +38,19 @@ input {
   }
 }
 
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  margin-top: 12vh;
+  gap: 8px;
+}
+
 #data-container {
   width: 360px;
-  margin: 10vh auto;
+  margin: 0 auto;
   margin-top: 18px;
   margin-bottom: 5vh;
   min-height: 140px;
@@ -230,7 +240,7 @@ dialog {
 
 label:has(*[id="date-picker"]) {
   width: 360px;
-  margin: 10vh auto;
+  margin: 0 auto;
   display: flex;
   color: #868686;
   flex-direction: column;
@@ -304,25 +314,7 @@ button {
   }
 }
 
-details:has(#last-week) {
-  max-width: 360px;
-  margin: 0 auto;
-
-  & > summary {
-    text-align: center;
-    margin-top: 8px;
-    padding: 8px 0;
-    list-style: none;
-    border-radius: 6px;
-
-    &:hover {
-      background-color: #353535;
-      cursor: pointer;
-    }
-  }
-}
-
-#last-week {
+#records {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -349,4 +341,9 @@ table {
     opacity: 0.9;
     padding: 1px 12px;
   }
+}
+
+.records-container {
+  max-height: 80dvh;  
+  overflow-y: auto;
 }

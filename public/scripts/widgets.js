@@ -106,10 +106,9 @@ function addDecimalTimeToDate(originalDate, decimal) {
   return `${hrs}:${mins < 10 ? "0" + mins : mins}`
 }
 
-async function renderWorkWeek(db, user) {
+async function renderWorkWeek(timeframe) {
   try {
-    const { records, total } = await getRecords(db, user)
-    const container = document.querySelector("#last-week")
+    const container = document.querySelector("#records")
     
     const table = document.createElement("table")
     const thead = document.createElement("thead")
@@ -126,10 +125,10 @@ async function renderWorkWeek(db, user) {
 
     table.appendChild(thead)
 
-    records?.forEach((record) => {
+    Object.keys(timeframe?.data)?.forEach((key) => {
       const tr = document.createElement("tr")
 
-      const date = new Date(record?.date).toLocaleDateString("pt-BR", {
+      const date = new Date(timeframe?.data[key]?.date).toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "numeric",
         month: "long"
@@ -141,7 +140,7 @@ async function renderWorkWeek(db, user) {
       tr.innerHTML = `
           <td>${part1}</td>
           <td>${part2}</td>
-          <td>${record?.total ?? "---"}</td>
+          <td>${timeframe?.data[key]?.total ?? "---"}</td>
         `
       tbody.appendChild(tr)
     })
@@ -149,71 +148,10 @@ async function renderWorkWeek(db, user) {
     table.appendChild(tbody)
     container.appendChild(table)
 
-    totalSpan.style.color = total.startsWith("-") ? "rgb(255, 121, 98)" : "#3ac363ff"
-    totalSpan.textContent = `Total: ${total}`
+    totalSpan.style.color = timeframe?.total.startsWith("-") ? "rgb(255, 121, 98)" : "#3ac363ff"
+    totalSpan.textContent = `Total: ${timeframe?.total}`
     container.appendChild(totalSpan)
   } catch (err) {
     console.error(err)
-  }
-}
-
-async function getRecords(db, user) {
-  let total = 0
-
-  const records = await db.getByIndex(
-    'records',
-    'byUser',
-    user
-  )
-
-  for (let i = 0; i < records.length; i++) {
-    if (i > 0 && !isNaN(records[i]?.time)) {
-      if (!isNaN((parseFloat(records[i]?.time) - 8))) {
-        total += (parseFloat(records[i]?.time) - 8)
-      } else {
-        total += 8
-      }
-    }
-  }
-
-  const sign = total < 0 ? "-" : ""
-  const abs = Math.abs(total)
-
-  const hours = Math.floor(abs)
-  const minutes = Math.round((abs - hours) * 60)
-
-  return { records, total: `${sign}${hours}h ${minutes}m` }
-}
-
-async function saveToDB(db, data, user) {
-  const timeframe = data?.data
-
-  for (const key of Object.keys(timeframe)) {
-    const result = await db.getByIndex(
-      'records',
-      'byUserAndDate',
-      [user, timeframe[key].date]
-    )
-
-    const record = Array.isArray(result) ? result[0] : result
-
-    if (!record) {
-      await db.add('records', {
-        date: timeframe[key].date,
-        total: timeframe[key]?.total,
-        time: timeframe[key]?.total ? parseFloat(timeframe[key]?.total) : timeframe[key]?.total,
-        points: timeframe[key]?.points ?? [],
-        user,
-      })
-    } else {
-      await db.put('records', {
-        id: record.id,
-        date: record.date,
-        time: record.time,
-        total: timeframe[key]?.formatted,
-        points: timeframe[key]?.points ?? [],
-        user: record.user,
-      })
-    }
   }
 }

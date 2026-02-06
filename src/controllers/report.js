@@ -20,18 +20,18 @@ export function calculateWorkedTime(date, mcs, format = true) {
 
     if (mcs.length === 1) {
       total = Math.abs(differenceInMinutes(now, timestamps[0]) / 60)
-    } else { 
+    } else {
       const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
       const difference2 = differenceInMinutes(now, timestamps[2]) / 60
       total = difference1 + difference2
     }
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
-  } else if (mcs.length > 0) { 
+  } else if (mcs.length > 0) {
     if (mcs.length === 2) {
       const difference = differenceInMinutes(timestamps[1], timestamps[0]) / 60
       total = difference
-    } else { 
+    } else {
       const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
       const difference2 = differenceInMinutes(timestamps[3], timestamps[2]) / 60
       total = difference1 + difference2
@@ -76,11 +76,13 @@ class ReportController {
       return res.status(400).send()
     }
 
+    const { token } = getToken(req)
+
     await fetch(baseUrl + "/db/estrutura.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Cookie": `STOU_Sistemas=${req.cookies.session}`
+        "Cookie": `STOU_Sistemas=${token}`
       },
       body: new URLSearchParams({
         cmd: "getDadosDashboardPrincipal",

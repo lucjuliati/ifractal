@@ -7,45 +7,43 @@
 </head>
 
 <body class="theme">
-  <div class="app">
-    <label>
-      Consultar data
-      <input type="date" id="date-picker">
-    </label>
+  <div class="container">
+    <div class="app">
+      <label>
+        Consultar data
+        <input type="date" id="date-picker">
+      </label>
 
-    <div id="data-container"></div>
+      <div id="data-container"></div>
 
-    <dialog id="modal">
-      <div class="navigation">
-        <button id="previous">Anterior</button>
-        <button id="next">Próximo</button>
-      </div>
-      <div class="modal-content">
-      </div>
+      <dialog id="modal">
+        <div class="navigation">
+          <button id="previous">Anterior</button>
+          <button id="next">Próximo</button>
+        </div>
+        <div class="modal-content">
+        </div>
 
-      <form method="dialog">
-        <button>OK</button>
-      </form>
-    </dialog>
+        <form method="dialog">
+          <button>OK</button>
+        </form>
+      </dialog>
 
-    <a href="https://stou.ifractal.com.br/fulltime/phonto.php" target="_blank" rel="noopener noreferrer">
-      <button>Registrar ponto</button>
-    </a>
-
-    <details>
-      <summary>Últimos dias</summary>
-      <div id="last-week"></div>
-    </details>
-
-    <script src="utils/calculate.js"></script>
-    <script src="utils/indexedDB.js"></script>
-    <script src="scripts/widgets.js"></script>
-    <script src="scripts/main.js"></script>
-    <script src="scripts/report.js"></script>
-    <script>
-      renderData({{{ data }}})
-    </script>
+      <a href="https://stou.ifractal.com.br/fulltime/phonto.php" target="_blank" rel="noopener noreferrer">
+        <button>Registrar ponto</button>
+      </a>
+    </div>
+    <div class="records-container">
+      <p style="text-align: center; opacity:0.85">Últimos dias</p>
+      <div id="records"></div>
+    </div>
   </div>
+  <script src="scripts/widgets.js"></script>
+  <script src="scripts/main.js"></script>
+  <script src="scripts/report.js"></script>
+  <script>
+    renderData({{{ data }}})
+  </script>
 </body>
 
 </html>
