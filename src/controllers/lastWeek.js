@@ -81,14 +81,11 @@ export async function handleLastWeek(req, res) {
           const formatted = calculateWorkedTime(Object.keys(lastWeek)[i], mcs)
           const day = lastWeek[Object.keys(lastWeek)[i]]
 
-          days[day.date] = { ...day, formatted, total: workedTime, points: mcs }
-
-          if (i > 0 && !isNaN(workedTime)) {
-            if (!isNaN((parseFloat(workedTime) - 8))) {
-              total += (parseFloat(workedTime) - 8)
-            } else {
-              total += 8
-            }
+        if (i > 0) {
+          if (!isNaN((parseFloat(workedTime) - 8))) {
+            total += (parseFloat(workedTime) - 8)
+          } else {
+            total += 8
           }
         }
       })
