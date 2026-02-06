@@ -1,7 +1,7 @@
 
 import parseCookie from "../utils/parseCookie.js"
 import { baseUrl } from "../utils/config.js"
-import { handleLastWeek, getStoredDates } from "./lastWeek.js"
+import { handleLastWeek } from "./lastWeek.js"
 import { getToken } from "../utils/getToken.js"
 
 const isSecure = process.env.NODE_ENV === "production"
@@ -83,7 +83,7 @@ class AppController {
         const lastWeek = await handleLastWeek(req, res)
         const data = JSON.stringify({
           ...json?.colab?.centro1,
-          stored: (await getStoredDates(req)),
+          user,
           lastWeek
         })
         return res.render("home", { data })

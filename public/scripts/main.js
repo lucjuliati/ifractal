@@ -1,4 +1,17 @@
+
 const dataContainer = document.querySelector("#data-container")
+const db = new IndexedDBUtil("dates", 1, [{
+  name: "records",
+  keyPath: "id",
+  autoIncrement: true,
+  indexes: [
+    { name: "byDate", keyPath: "date" },
+    { name: "byUser", keyPath: "user" },
+    { name: "byUserAndDate", keyPath: ["user", "date"] }
+  ]
+}]
+)
+
 let lastFetched = 0
 
 function fetchData() {
@@ -15,7 +28,7 @@ function handleLunchBreak(e) {
   fetchData()
 }
 
-function renderData(serverData) {
+async function renderData(serverData) {
   try {
     dataContainer.innerHTML = ""
 
@@ -43,7 +56,8 @@ function renderData(serverData) {
       renderDate("Atualizado em", lastUpdated)
     ].filter(item => item !== null)
 
-    renderWorkWeek(serverData?.stored)
+    await saveToDB(db, serverData?.lastWeek, serverData?.user)
+    await renderWorkWeek(db, serverData?.user)
 
     itens.forEach(item => dataContainer.appendChild(item))
   } catch (err) {
@@ -51,7 +65,9 @@ function renderData(serverData) {
   }
 }
 
-function getData() {
+function start() {
+  db.open()
+
   setInterval(() => {
     if (!document.hidden) fetchData()
   }, 60_000)
@@ -63,4 +79,4 @@ document.addEventListener("visibilitychange", () => {
   }
 })
 
-getData()
+start()

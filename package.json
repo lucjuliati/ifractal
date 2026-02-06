@@ -12,17 +12,14 @@
   "license": "ISC",
   "type": "module",
   "description": "",
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "dependencies": {
     "@netlify/functions": "^4.0.0",
     "@types/express": "^5.0.2",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-handlebars": "^8.0.3",
     "handlebars": "^4.7.8",
-    "mongoose": "^9.1.5",
     "serverless-http": "^3.2.0"
   }
 }

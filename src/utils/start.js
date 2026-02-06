@@ -2,19 +2,10 @@ import express from "express"
 import { engine } from "express-handlebars"
 import cookieParser from "cookie-parser"
 import routes from "../routes.js"
-import mongooseConfig from "mongoose"
-import { config } from "dotenv"
-config()
 
 export default async function start(netlify = false) {
   const PORT = 4000
   const app = express()
-
-  try {
-    await mongooseConfig.connect(process.env.MONGO_URL)
-  } catch (err) {
-    console.error('Failed to connect to MongoDB:', err)
-  }
 
   app.use(cookieParser())
   app.use(express.json())
