@@ -70,13 +70,15 @@ export async function handleLastWeek(req, res) {
     try {
       await Promise.all(requests).then(async (responses) => {
         for (let i = 0; i < responses.length; i++) {
+          const key = Object.keys(lastWeek)[i]
           const response = await responses[i].text()
 
           const json = JSON.parse(response)
           const mcs = json?.ponto_resumo_dia?.mcs ?? []
-          const workedTime = calculateWorkedTime(Object.keys(lastWeek)[i], mcs, false)
-          const formatted = calculateWorkedTime(Object.keys(lastWeek)[i], mcs)
-          const day = lastWeek[Object.keys(lastWeek)[i]]
+          const workedTime = calculateWorkedTime(key, mcs, false)
+
+          const formatted = calculateWorkedTime(key, mcs)
+          const day = lastWeek[key]
 
           days[day.date] = { ...day, formatted, total: workedTime, points: mcs }
 
@@ -100,14 +102,14 @@ export async function handleLastWeek(req, res) {
 
     const hours = Math.floor(abs)
     const minutes = Math.round((abs - hours) * 60)
-
+    
     data = { total: `${sign}${hours}h ${minutes}m`, data: days }
 
     if (data) {
       await res.cookie("last_week", JSON.stringify(data), {
         httpOnly: false,
         secure: isSecure,
-        maxAge: 1800
+        maxAge: 600
       })
     } else {
       res.clearCookie("last_week", { httpOnly: false, secure: isSecure })

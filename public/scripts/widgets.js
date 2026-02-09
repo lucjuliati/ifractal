@@ -200,7 +200,7 @@ async function saveToDB(db, data, user) {
     if (!record) {
       await db.add('records', {
         date: timeframe[key].date,
-        total: timeframe[key]?.total,
+        total: timeframe[key]?.formatted,
         time: timeframe[key]?.total ? parseFloat(timeframe[key]?.total) : timeframe[key]?.total,
         points: timeframe[key]?.points ?? [],
         user,

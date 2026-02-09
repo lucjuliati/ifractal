@@ -29,6 +29,7 @@ function handleLunchBreak(e) {
 }
 
 async function renderData(serverData) {
+  console.log(serverData)
   try {
     dataContainer.innerHTML = ""
 

@@ -3,8 +3,6 @@ import { engine } from "express-handlebars"
 import cookieParser from "cookie-parser"
 import routes from "../routes.js"
 
-console.log(process.env.MONGO_URL)
-
 export default function start(netlify = false) {
   const PORT = 4000
   const app = express()
