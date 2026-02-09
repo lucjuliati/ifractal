@@ -10,6 +10,15 @@ body {
   font-size: 0.875em;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 24px;
+  grid-row-gap: 16px;
+  margin: 10vh 10vw;
+}
+
 button,
 input {
   font-size: 0.9em;
@@ -25,6 +34,13 @@ input {
   background-color: #ffffff;
 }
 
+
+@media (max-width: 930px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --border-color: #636363;
@@ -38,8 +54,23 @@ input {
   }
 }
 
+.data-table {
+  /* background-color: #1b1b1b; */
+  border-radius: 12px;
+  padding: 20px 0;
+  max-height: 70dvh;
+  overflow-y: auto;
+}
+
+.data-table p {
+  text-align: center;
+  margin: 0;
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+
 #data-container {
-  width: 360px;
+  width: 400px;
   margin: 10vh auto;
   margin-top: 18px;
   margin-bottom: 5vh;
@@ -48,6 +79,9 @@ input {
 
 .app {
   padding: 4px 12px;
+  /* background-color: #1b1b1b; */
+  border-radius: 12px;
+  padding: 20px 0;
 
   p {
     margin: 4px 0;
@@ -229,13 +263,14 @@ dialog {
 }
 
 label:has(*[id="date-picker"]) {
-  width: 360px;
-  margin: 10vh auto;
+  width: 400px;
+  margin: 0 auto;
   display: flex;
-  color: #868686;
+  opacity: 0.75;
   flex-direction: column;
   text-align: center;
   margin-bottom: 8px;
+  row-gap: 6px;
 }
 
 #work-week {
@@ -243,7 +278,7 @@ label:has(*[id="date-picker"]) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 360px;
+  max-width: 400px;
   margin-top: 22px;
 
   thead th {
@@ -305,10 +340,10 @@ button {
 }
 
 details:has(#last-week) {
-  max-width: 360px;
+  max-width: 400px;
   margin: 0 auto;
 
-  & > summary {
+  &>summary {
     text-align: center;
     margin-top: 8px;
     padding: 8px 0;
@@ -327,7 +362,7 @@ details:has(#last-week) {
   flex-direction: column;
   justify-content: center;
   padding-bottom: 40px;
-  width: 360px;
+  width: 400px;
   margin: 0 auto;
 
   span {

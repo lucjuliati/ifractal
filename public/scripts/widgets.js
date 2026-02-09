@@ -109,13 +109,15 @@ function addDecimalTimeToDate(originalDate, decimal) {
 async function renderWorkWeek(db, user) {
   try {
     const { records, total } = await getRecords(db, user)
+    console.log(records)
     const container = document.querySelector("#last-week")
+    container.innerHTML = ""
 
     const table = document.createElement("table")
     const thead = document.createElement("thead")
     const tbody = document.createElement("tbody")
     const totalSpan = document.createElement("span")
-
+    
     thead.innerHTML = `
       <tr>
         <th>Dia</th>
@@ -129,7 +131,7 @@ async function renderWorkWeek(db, user) {
     records?.forEach((record) => {
       const tr = document.createElement("tr")
 
-      const date = new Date(record?.date).toLocaleDateString("pt-BR", {
+      const date = new Date(`${record?.date} 12:00:00`).toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "numeric",
         month: "long"
@@ -183,6 +185,8 @@ async function getRecords(db, user) {
     const hours = Math.floor(abs)
     const minutes = Math.round((abs - hours) * 60)
 
+    records.sort((a, b) => new Date(b.date) - new Date(a.date))
+
     return { records, total: `${sign}${hours}h ${minutes}m` }
   } catch (err) {
     console.error(err)
@@ -192,8 +196,8 @@ async function getRecords(db, user) {
 async function saveToDB(db, data, user) {
   if (!data) return
 
-  const timeframe = data
-
+  const timeframe = data?.data
+  
   for (const key of Object.keys(timeframe)) {
     const result = await db.getByIndex(
       'records',
@@ -214,7 +218,7 @@ async function saveToDB(db, data, user) {
     } else {
       const dayOfWeek = new Date(`${timeframe[key].date} 12:00:00`).getDay()
 
-      if ([5, 6].includes(dayOfWeek)) continue
+      if ([0, 6].includes(dayOfWeek)) continue
 
       await db.put('records', {
         id: record.id,

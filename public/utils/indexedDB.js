@@ -54,6 +54,8 @@ class IndexedDBUtil {
   }
 
   async getAll(storeName) {
+        console.log(storeName)
+
     await this.open()
 
     return new Promise((resolve, reject) => {
@@ -109,6 +111,7 @@ class IndexedDBUtil {
     return new Promise((resolve, reject) => {
       const store = this._getStore(storeName)
       const index = store.index(indexName)
+
       const request = index.getAll(query)
 
       request.onsuccess = () => resolve(request.result)
@@ -116,8 +119,8 @@ class IndexedDBUtil {
     })
   }
 
-  static deleteDB(dbName) {
-    indexedDB.deleteDatabase(dbName)
+  static deleteDB() {
+    indexedDB.deleteDatabase("records")
   }
 
   close() {
