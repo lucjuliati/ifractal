@@ -6,6 +6,8 @@ import mongooseConfig from "mongoose"
 import { config } from "dotenv"
 config()
 
+console.log(process.env.MONGO_URL)
+
 export default function start(netlify = false) {
   const PORT = 4000
   const app = express()
