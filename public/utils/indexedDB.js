@@ -116,6 +116,10 @@ class IndexedDBUtil {
     })
   }
 
+  static deleteDB(dbName) {
+    indexedDB.deleteDatabase(dbName)
+  }
+
   close() {
     this.db?.close()
     this.db = null

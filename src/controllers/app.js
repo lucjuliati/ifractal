@@ -53,45 +53,44 @@ class AppController {
   }
 
   async data(req, res) {
-    if (req.cookies?.session) {
-      const { token } = getToken(req)
-
-      fetch(baseUrl + "/db/estrutura.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cookie": `STOU_Sistemas=${token}`
-        },
-        body: new URLSearchParams({
-          cmd: "getDadosDashboardPrincipal",
-          sistema: "ifponto",
-          k: "VEooMo4B0BbPpgcq0ajJ/5Gaft9t6S3lHOSMdazUhLE="
-        })
-      }).then(async (data) => {
-        const response = await data.text()
-        let json = {}
-
-        if (response.includes("<html")) {
-          res.clearCookie("session", {
-            httpOnly: true,
-            secure: isSecure,
-          })
-
-          return res.render("login")
-        } else {
-          json = JSON.parse(response)
-        }
-
-        return res.status(200).json({
-          data: json?.colab?.centro1
-        })
-      }).catch(console.error)
-    } else {
+    if (!req.cookies?.session) {
       console.error("No session")
       return res.status(400).send()
     }
+
+    const { token } = getToken(req)
+
+    fetch(baseUrl + "/db/estrutura.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": `STOU_Sistemas=${token}`
+      },
+      body: new URLSearchParams({
+        cmd: "getDadosDashboardPrincipal",
+        sistema: "ifponto",
+        k: "VEooMo4B0BbPpgcq0ajJ/5Gaft9t6S3lHOSMdazUhLE="
+      })
+    }).then(async (data) => {
+      const response = await data.text()
+      let json = {}
+
+      if (response.includes("<html")) {
+        res.clearCookie("session", {
+          httpOnly: true,
+          secure: isSecure,
+        })
+
+        return res.render("login")
+      } else {
+        json = JSON.parse(response)
+      }
+
+      return res.status(200).json({
+        data: json?.colab?.centro1
+      })
+    }).catch(console.error)
   }
 }
-
 
 export default new AppController()

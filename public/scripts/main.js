@@ -14,7 +14,7 @@ const db = new IndexedDBUtil("dates", 1, [{
 
 let lastFetched = 0
 
-function fetchData() {
+async function fetchData() {
   lastFetched = new Date().getTime()
 
   fetch("/data")
@@ -57,7 +57,10 @@ async function renderData(serverData) {
       renderDate("Atualizado em", lastUpdated)
     ].filter(item => item !== null)
 
-    await saveToDB(db, serverData?.lastWeek, serverData?.user)
+    if (serverData?.lastWeek) {
+      await saveToDB(db, serverData?.lastWeek, serverData?.user)
+    }
+    
     await renderWorkWeek(db, serverData?.user)
 
     itens.forEach(item => dataContainer.appendChild(item))

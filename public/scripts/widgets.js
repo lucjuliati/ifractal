@@ -158,35 +158,41 @@ async function renderWorkWeek(db, user) {
 }
 
 async function getRecords(db, user) {
-  let total = 0
+  try {
+    let total = 0
 
-  const records = await db.getByIndex(
-    'records',
-    'byUser',
-    user
-  )
+    const records = await db.getByIndex(
+      'records',
+      'byUser',
+      user
+    )
 
-  for (let i = 0; i < records.length; i++) {
-    if (i > 0 && !isNaN(records[i]?.time)) {
-      if (!isNaN((parseFloat(records[i]?.time) - 8))) {
-        total += (parseFloat(records[i]?.time) - 8)
-      } else {
-        total += 8
+    for (let i = 0; i < records.length; i++) {
+      if (i > 0 && !isNaN(records[i]?.time)) {
+        if (!isNaN((parseFloat(records[i]?.time) - 8))) {
+          total += (parseFloat(records[i]?.time) - 8)
+        } else {
+          total += 8
+        }
       }
     }
+
+    const sign = total < 0 ? "-" : ""
+    const abs = Math.abs(total)
+
+    const hours = Math.floor(abs)
+    const minutes = Math.round((abs - hours) * 60)
+
+    return { records, total: `${sign}${hours}h ${minutes}m` }
+  } catch (err) {
+    console.error(err)
   }
-
-  const sign = total < 0 ? "-" : ""
-  const abs = Math.abs(total)
-
-  const hours = Math.floor(abs)
-  const minutes = Math.round((abs - hours) * 60)
-
-  return { records, total: `${sign}${hours}h ${minutes}m` }
 }
 
 async function saveToDB(db, data, user) {
-  const timeframe = data?.data
+  if (!data) return
+
+  const timeframe = data
 
   for (const key of Object.keys(timeframe)) {
     const result = await db.getByIndex(
