@@ -1,18 +1,14 @@
 import express from "express"
 import { engine } from "express-handlebars"
 import cookieParser from "cookie-parser"
+import { connectDB } from "./connectDB.js"
 import routes from "../routes.js"
-import mongooseConfig from "mongoose"
-import { config } from "dotenv"
-config()
-
-console.log(process.env.MONGO_URL)
 
 export default function start(netlify = false) {
   const PORT = 4000
   const app = express()
 
-  mongooseConfig.connect(process.env.MONGO_URL).then(() => {
+  connectDB().then(() => {
     app.use(cookieParser())
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
