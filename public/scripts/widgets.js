@@ -110,7 +110,7 @@ async function renderWorkWeek(db, user) {
   try {
     const { records, total } = await getRecords(db, user)
     const container = document.querySelector("#last-week")
-    
+
     const table = document.createElement("table")
     const thead = document.createElement("thead")
     const tbody = document.createElement("tbody")
@@ -206,6 +206,10 @@ async function saveToDB(db, data, user) {
         user,
       })
     } else {
+      const dayOfWeek = new Date(`${timeframe[key].date} 12:00:00`).getDay()
+
+      if ([5, 6].includes(dayOfWeek)) continue
+
       await db.put('records', {
         id: record.id,
         date: record.date,
