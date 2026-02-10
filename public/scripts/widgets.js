@@ -117,7 +117,7 @@ async function renderWorkWeek(db, user) {
     const thead = document.createElement("thead")
     const tbody = document.createElement("tbody")
     const totalSpan = document.createElement("span")
-    
+
     thead.innerHTML = `
       <tr>
         <th>Dia</th>
@@ -139,11 +139,16 @@ async function renderWorkWeek(db, user) {
 
       const part1 = date.split(",")[0]
       const part2 = date.split(",")[1]
+      const total = record?.total ?? "---"
+
+      if (record.time == 0 || record?.points?.length == 0) {
+        total = "---"
+      }
 
       tr.innerHTML = `
           <td>${part1}</td>
           <td>${part2}</td>
-          <td>${record?.total ?? "---"}</td>
+          <td>${total}</td>
         `
       tbody.appendChild(tr)
     })
@@ -199,7 +204,7 @@ async function saveToDB(db, data, user) {
   if (!data) return
 
   const timeframe = data?.data
-  
+
   for (const key of Object.keys(timeframe)) {
     const result = await db.getByIndex(
       'records',
