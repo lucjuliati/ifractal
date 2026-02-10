@@ -12,11 +12,11 @@ export async function handleLastWeek(req, res) {
     let canFetch = false
     let lastWeek = {}
 
-    Array.from({ length: 12 }).reverse().forEach((_, i) => {
+    Array.from({ length: 35 }).reverse().forEach((_, i) => {
       const day = subDays(new Date(), i)
       const date = day.toISOString().split("T")[0]
 
-      if (Object.keys(lastWeek).length < 7 && !isWeekend(day)) {
+      if (Object.keys(lastWeek).length < 30 && !isWeekend(day)) {
         lastWeek[date] = {
           date,
           isFuture: isFuture(`${day} 23:59:59`),
