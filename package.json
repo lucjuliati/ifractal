@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "tsx src/index.js",
     "dev": "tsx --watch src/index.ts",
     "preview": "netlify build --context deploy-preview",
     "deploy": "netlify deploy --prod"
