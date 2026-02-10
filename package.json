@@ -14,11 +14,11 @@
   "description": "",
   "dependencies": {
     "@netlify/functions": "^4.0.0",
-    "@types/express": "^5.0.2",
+    "@types/express": "^5.0.6",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
-    "express": "^5.1.0",
-    "express-handlebars": "^8.0.3",
+    "express": "^5.2.1",
+    "express-handlebars": "^8.0.5",
     "handlebars": "^4.7.8",
     "serverless-http": "^3.2.0"
   }
