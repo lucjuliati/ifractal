@@ -139,7 +139,7 @@ async function renderWorkWeek(db, user) {
 
       const part1 = date.split(",")[0]
       const part2 = date.split(",")[1]
-      const total = record?.total ?? "---"
+      let total = record?.total ?? "---"
 
       if (record.time == 0 || record?.points?.length == 0) {
         total = "---"
