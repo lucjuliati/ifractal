@@ -1,7 +1,7 @@
 import express from "express"
-import app from "./controllers/app.js"
-import report from "./controllers/report.js"
-import auth from "./controllers/auth.js"
+import app from "./controllers/app"
+import report from "./controllers/report"
+import auth from "./controllers/auth"
 
 const routes = express.Router()
 

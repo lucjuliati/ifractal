@@ -131,25 +131,32 @@ async function renderWorkWeek(db, user) {
     records?.forEach((record) => {
       const tr = document.createElement("tr")
 
-      const date = new Date(`${record?.date} 12:00:00`).toLocaleDateString("pt-BR", {
+      const date = new Date(`${record?.date} 12:00:00`)
+      const dayOfWeek = date.getDay()
+      const formatted = date.toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "numeric",
         month: "long"
       })
 
-      const part1 = date.split(",")[0]
-      const part2 = date.split(",")[1]
+      const part1 = formatted.split(",")[0]
+      const part2 = formatted.split(",")[1]
       let total = record?.total ?? "---"
 
       if (record.time == 0 || record?.points?.length == 0) {
         total = "---"
       }
 
+      if (dayOfWeek == 1) {
+        console.log("this", formatted)
+        tr.style.borderTop = "1px solid #cacaca"
+      }
+
       tr.innerHTML = `
-          <td>${part1}</td>
-          <td>${part2}</td>
-          <td>${total}</td>
-        `
+        <td>${part1}</td>
+        <td>${part2}</td>
+        <td>${total}</td>
+      `
       tbody.appendChild(tr)
     })
 

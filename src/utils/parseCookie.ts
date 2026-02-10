@@ -1,6 +1,8 @@
+import { Request } from "express"
 
-export default function parseCookie(cookies) {
-  const json = {}
+export default function parseCookie(cookies: Request["cookies"]) {
+  const json: { [key: string]: string } = {}
+  
   if (!Array.isArray(cookies) || cookies.length === 0) {
     return json
   }
@@ -10,7 +12,7 @@ export default function parseCookie(cookies) {
 
     if (cookiePart) {
       const [name, ...values] = cookiePart.split("=")
-      const trimmedName = name.trim()
+      const trimmedName: string = name.trim()
 
       if (trimmedName) {
         json[trimmedName] = values.join("=").trim()

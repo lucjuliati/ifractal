@@ -1,17 +1,18 @@
 
-import parseCookie from "../utils/parseCookie.js"
-import { baseUrl } from "../utils/config.js"
+import parseCookie from "../utils/parseCookie"
+import { baseUrl } from "../utils/config"
+import { Request, Response } from "express"
 
 const isSecure = process.env.NODE_ENV === "production"
 
 class AuthController {
-  async login(req, res) {
+  async login(req: Request, res: Response) {
     if (Buffer.isBuffer(req.body)) {
-      req.body = JSON.parse(req.body)
+      req.body = JSON.parse(req.body.toString())
     }
 
     const body = new URLSearchParams({
-      primeiro_login: true,
+      primeiro_login: "true",
       login: req.body.login,
       senha: req.body.password
     })
@@ -38,7 +39,7 @@ class AuthController {
           throw new Error("Invalid data")
         }
       } catch (err) {
-        throw new Error(err)
+        throw err
       }
     }).catch((err) => {
       console.error(err)

@@ -1,0 +1,1 @@
+export const baseUrl: string = "https://stou.ifractal.com.br/fulltime"

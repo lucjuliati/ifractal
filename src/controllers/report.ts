@@ -1,9 +1,11 @@
-import { baseUrl } from "../utils/config.js"
+import { baseUrl } from "../utils/config"
 import { differenceInMinutes } from "date-fns"
+import { getToken } from "../utils/getToken"
+import { Request, Response } from "express"
 
 const isSecure = process.env.NODE_ENV === "production"
 
-export function calculateWorkedTime(date, points, format = true) {
+export function calculateWorkedTime(date: string, points: string[]): number | null {
   const myOffset = '-03:00'
 
   let timestamps = points?.map(time => `${date}T${time}:00${myOffset}`)
@@ -44,31 +46,26 @@ export function calculateWorkedTime(date, points, format = true) {
     hours = Math.abs(hours)
   }
 
-  if (format) {
-    if (isNaN(hours) || isNaN(minutes)) {
-      return null
-    }
 
-    if (hours.toString().includes("-")) {
-      hours = hours.toString().replace("-", "")
-    }
+  return Number(Math.abs(total).toFixed(2))
+}
 
-    return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
-  } else {
-    return Math.abs(total).toFixed(2)
-  }
+export function decimalToTime(decimal: number) {
+  const hours = Math.floor(decimal)
+  const minutes = Math.round((decimal - hours) * 60)
+
+  return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
+}
+
+export function format(date: string, points: string[]) {
+  return decimalToTime(calculateWorkedTime(date, points) as number)
 }
 
 class ReportController {
-  decimalToTimeFormatted = (decimal) => {
-    const hours = Math.floor(decimal)
-    const minutes = Math.round((decimal - hours) * 60)
 
-    return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
-  }
 
-  byDate = async (req, res) => {
-    const date = req.query.date
+  byDate = async (req: Request, res: Response) => {
+    const { date } = req.query as { date: string }
 
     if (!req.cookies?.session) {
       return res.status(400).send()
@@ -92,14 +89,14 @@ class ReportController {
       },
       body: new URLSearchParams({
         cmd: "getDadosDashboardPrincipal",
-        data: date,
+        data: date as string,
         fn: "ponto_do_dia",
         k: "6PszETQa9etNUyJFS++JDYlmG+dLEHYYbfPuyJKrajA=",
         tp: "mais",
       })
     }).then(async (data) => {
       const response = await data.text()
-      let json = {}
+      let json = {} as { ponto_resumo_dia: Record<string, unknown> }
 
       if (response.includes("<html>")) {
         res.clearCookie("session", {
@@ -112,7 +109,7 @@ class ReportController {
         json = JSON.parse(response)
         const mcs = json?.ponto_resumo_dia?.mcs ?? []
 
-        json.ponto_resumo_dia.totalWorkedTime = calculateWorkedTime(date, mcs)
+        json.ponto_resumo_dia.totalWorkedTime = calculateWorkedTime(date, mcs as string[])
       }
 
       return res.status(200).json(json.ponto_resumo_dia)

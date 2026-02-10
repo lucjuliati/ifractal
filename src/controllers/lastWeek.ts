@@ -1,16 +1,24 @@
 
-import { baseUrl } from "../utils/config.js"
-import { calculateWorkedTime } from "./report.js"
+import { baseUrl } from "../utils/config"
+import { calculateWorkedTime, format } from "./report"
 import { isFuture, isWeekend, subDays } from "date-fns"
-import { getToken } from "../utils/getToken.js"
+import { getToken } from "../utils/getToken"
+import { Request, Response } from "express"
+import { TTLCache } from "../utils/cache"
 
-const isSecure = process.env.NODE_ENV === "production"
+type Day = {
+  date: string
+  isFuture: boolean
+  formatted: string | number | null
+  total: string | number | null
+  points?: string[]
+}
 
-export async function handleLastWeek(req, res) {
+export async function handleLastWeek(req: Request, res: Response) {
   try {
     let data = null
-    let canFetch = false
-    let lastWeek = {}
+    let lastWeek: { [key: string]: { date: string, isFuture: boolean } } = {}
+    const { user } = getToken(req)
 
     Array.from({ length: 12 }).reverse().forEach((_, i) => {
       const day = subDays(new Date(), i)
@@ -24,26 +32,22 @@ export async function handleLastWeek(req, res) {
       }
     })
 
-    const days = {}
+    const days: { [key: string]: Day } = {}
     const requests = []
     let total = 0
+    const cache = TTLCache.getInstance()
 
-    if (!req.cookies?.last_week) {
-      canFetch = true
+    if (cache.get(user)) {
+      return cache.get(user)
     }
 
-    if (!canFetch && req.cookies?.last_week) {
-      return JSON.parse(req.cookies.last_week)
-    }
-
-    for (const date in lastWeek) {
-      let fetchDate = new Date(date)
+    for (const day in lastWeek) {
+      let fetchDate = new Date(day)
       fetchDate.setDate(fetchDate.getDate() - 1)
-      fetchDate = fetchDate.toISOString().split("T")[0]
 
       const { token } = getToken(req)
 
-      if (lastWeek[date].isFuture === false) {
+      if (lastWeek[day].isFuture === false) {
         requests.push(
           fetch(baseUrl + "/db/estrutura.php", {
             method: "POST",
@@ -53,7 +57,7 @@ export async function handleLastWeek(req, res) {
             },
             body: new URLSearchParams({
               cmd: "getDadosDashboardPrincipal",
-              data: fetchDate,
+              data: fetchDate.toISOString().split("T")[0],
               fn: "ponto_do_dia",
               k: "6PszETQa9etNUyJFS++JDYlmG+dLEHYYbfPuyJKrajA=",
               tp: "mais",
@@ -66,7 +70,7 @@ export async function handleLastWeek(req, res) {
     Object.keys(lastWeek).forEach(day => {
       days[day] = { ...lastWeek[day], formatted: null, total: 0 }
     })
-
+    console.log("fetching")
     try {
       await Promise.all(requests).then(async (responses) => {
         for (let i = 0; i < responses.length; i++) {
@@ -75,16 +79,15 @@ export async function handleLastWeek(req, res) {
 
           const json = JSON.parse(response)
           const mcs = json?.ponto_resumo_dia?.mcs ?? []
-          const workedTime = calculateWorkedTime(key, mcs, false)
-
-          const formatted = calculateWorkedTime(key, mcs)
+          const workedTime = calculateWorkedTime(key, mcs)
+          const formatted = format(key, mcs)
           const day = lastWeek[key]
 
           days[day.date] = { ...day, formatted, total: workedTime, points: mcs }
 
-          if (i > 0 && !isNaN(workedTime)) {
-            if (!isNaN((parseFloat(workedTime) - 8))) {
-              total += (parseFloat(workedTime) - 8)
+          if (i > 0 && !isNaN(Number(workedTime))) {
+            if (!isNaN((parseFloat(workedTime?.toString()!) - 8))) {
+              total += (parseFloat(workedTime?.toString()!) - 8)
             } else {
               total += 8
             }
@@ -102,23 +105,14 @@ export async function handleLastWeek(req, res) {
 
     const hours = Math.floor(abs)
     const minutes = Math.round((abs - hours) * 60)
-    
+
     data = { total: `${sign}${hours}h ${minutes}m`, data: days }
 
-    if (data) {
-      await res.cookie("last_week", JSON.stringify(data), {
-        httpOnly: false,
-        secure: isSecure,
-        maxAge: 600
-      })
-    } else {
-      res.clearCookie("last_week", { httpOnly: false, secure: isSecure })
-    }
+    cache.set(user, data, 30_0000)
 
     return data
   } catch (err) {
     console.error(err)
-    res.clearCookie("last_week", { httpOnly: false, secure: isSecure })
 
     return null
   }

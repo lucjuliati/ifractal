@@ -1,12 +1,13 @@
 
-import { baseUrl } from "../utils/config.js"
-import { handleLastWeek } from "./lastWeek.js"
-import { getToken } from "../utils/getToken.js"
+import { baseUrl } from "../utils/config"
+import { handleLastWeek } from "./lastWeek"
+import { getToken } from "../utils/getToken"
+import { Request, Response } from "express"
 
 const isSecure = process.env.NODE_ENV === "production"
 
 class AppController {
-  async index(req, res) {
+  async index(req: Request, res: Response) {
     if (req.cookies?.session) {
       const { user, token } = getToken(req)
 
@@ -23,10 +24,10 @@ class AppController {
         })
       }).then(async (response) => {
         const text = await response.text()
-        let json = {}
+        let json = {} as { colab?: { centro1: {} } }
 
         if (text.includes("<html")) {
-          req.user = user
+          (req as Request & { user?: string }).user = user
 
           res.clearCookie("session", {
             httpOnly: true,
@@ -38,12 +39,10 @@ class AppController {
           json = JSON.parse(text)
         }
 
-        const lastWeek = await handleLastWeek(req, res)
-
         const data = JSON.stringify({
           ...json?.colab?.centro1,
+          lastWeek: await handleLastWeek(req, res),
           user,
-          lastWeek
         })
         return res.render("home", { data })
       }).catch(console.error)
@@ -52,7 +51,7 @@ class AppController {
     }
   }
 
-  async data(req, res) {
+  async data(req: Request, res: Response) {
     if (!req.cookies?.session) {
       console.error("No session")
       return res.status(400).send()
@@ -73,7 +72,7 @@ class AppController {
       })
     }).then(async (data) => {
       const response = await data.text()
-      let json = {}
+      let json = {} as { colab?: { centro1: string } }
 
       if (response.includes("<html")) {
         res.clearCookie("session", {
