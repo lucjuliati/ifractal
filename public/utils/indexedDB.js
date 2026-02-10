@@ -54,8 +54,6 @@ class IndexedDBUtil {
   }
 
   async getAll(storeName) {
-        console.log(storeName)
-
     await this.open()
 
     return new Promise((resolve, reject) => {

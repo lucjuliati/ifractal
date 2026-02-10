@@ -109,7 +109,7 @@ function addDecimalTimeToDate(originalDate, decimal) {
 async function renderWorkWeek(db, user) {
   try {
     const { records, total } = await getRecords(db, user)
-    console.log(records)
+
     const container = document.querySelector("#last-week")
     container.innerHTML = ""
 
@@ -171,6 +171,8 @@ async function getRecords(db, user) {
 
     for (let i = 0; i < records.length; i++) {
       if (i > 0 && !isNaN(records[i]?.time)) {
+        if (records[i]?.time == 0) continue
+
         if (!isNaN((parseFloat(records[i]?.time) - 8))) {
           total += (parseFloat(records[i]?.time) - 8)
         } else {
