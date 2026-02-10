@@ -54,7 +54,7 @@ export class TTLCache<K, V> {
     this.store.clear()
   }
 
-  size(): number {
+  get size(): number {
     return this.store.size
   }
 

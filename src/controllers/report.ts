@@ -3,8 +3,6 @@ import { differenceInMinutes } from "date-fns"
 import { getToken } from "../utils/getToken"
 import { Request, Response } from "express"
 
-const isSecure = process.env.NODE_ENV === "production"
-
 export function calculateWorkedTime(date: string, points: string[]): number | null {
   const myOffset = '-03:00'
 
@@ -96,20 +94,22 @@ class ReportController {
       })
     }).then(async (data) => {
       const response = await data.text()
-      let json = {} as { ponto_resumo_dia: Record<string, unknown> }
+      let json = {} as {
+        ponto_resumo_dia: {
+          totalWorkedTime: string,
+          mcs: string[]
+        }
+      }
 
       if (response.includes("<html>")) {
-        res.clearCookie("session", {
-          httpOnly: true,
-          secure: isSecure,
-        })
+        res.clearCookie("session")
 
         return res.render("login")
       } else {
         json = JSON.parse(response)
         const mcs = json?.ponto_resumo_dia?.mcs ?? []
 
-        json.ponto_resumo_dia.totalWorkedTime = calculateWorkedTime(date, mcs as string[])
+        json.ponto_resumo_dia.totalWorkedTime = format(date, mcs as string[])
       }
 
       return res.status(200).json(json.ponto_resumo_dia)

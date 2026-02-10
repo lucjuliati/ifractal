@@ -16,12 +16,12 @@
     "strictFunctionTypes": true,
     "emitDecoratorMetadata": true,
     "incremental": true,
-    "outDir": "dist/server",
+    "outDir": "dist/",
     "esModuleInterop": true,
-
   },
   "include": [
     "**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

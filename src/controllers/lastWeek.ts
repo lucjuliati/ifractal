@@ -70,7 +70,9 @@ export async function handleLastWeek(req: Request, res: Response) {
     Object.keys(lastWeek).forEach(day => {
       days[day] = { ...lastWeek[day], formatted: null, total: 0 }
     })
+    
     console.log("fetching")
+
     try {
       await Promise.all(requests).then(async (responses) => {
         for (let i = 0; i < responses.length; i++) {

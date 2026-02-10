@@ -11,15 +11,13 @@ class AuthController {
       req.body = JSON.parse(req.body.toString())
     }
 
-    const body = new URLSearchParams({
-      primeiro_login: "true",
-      login: req.body.login,
-      senha: req.body.password
-    })
-
     fetch(baseUrl + "/conf/login.inc.php", {
       method: "POST",
-      body: body
+      body: new URLSearchParams({
+        primeiro_login: "true",
+        login: req.body.login,
+        senha: req.body.password
+      })
     }).then(async (data) => {
       try {
         const json = JSON.parse(await data.text())
@@ -34,7 +32,7 @@ class AuthController {
             maxAge: 24 * 60 * 60 * 1000
           })
 
-          res.status(200).send({ message: "Ok" })
+          res.status(200).send()
         } else {
           throw new Error("Invalid data")
         }
