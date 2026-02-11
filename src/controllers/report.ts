@@ -1,4 +1,4 @@
-import { baseUrl } from "../utils/config"
+import { baseUrl, isSecure } from "../utils/config"
 import { differenceInMinutes } from "date-fns"
 import { getToken } from "../utils/getToken"
 import { Request, Response } from "express"
@@ -102,7 +102,10 @@ class ReportController {
       }
 
       if (response.includes("<html>")) {
-        res.clearCookie("session")
+        res.clearCookie("session", {
+          httpOnly: true,
+          secure: isSecure,
+        })
 
         return res.render("login")
       } else {

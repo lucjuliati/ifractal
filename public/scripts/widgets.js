@@ -148,8 +148,7 @@ async function renderWorkWeek(db, user) {
       }
 
       if (dayOfWeek == 1) {
-        console.log("this", formatted)
-        tr.style.borderTop = "1px solid #cacaca"
+        tr.classList.add("monday")
       }
 
       tr.innerHTML = `
@@ -181,6 +180,8 @@ async function getRecords(db, user) {
       user
     )
 
+    records.sort((a, b) => new Date(b.date) - new Date(a.date))
+
     for (let i = 0; i < records.length; i++) {
       if (i > 0 && !isNaN(records[i]?.time)) {
         if (records[i]?.time == 0) continue
@@ -198,8 +199,6 @@ async function getRecords(db, user) {
 
     const hours = Math.floor(abs)
     const minutes = Math.round((abs - hours) * 60)
-
-    records.sort((a, b) => new Date(b.date) - new Date(a.date))
 
     return { records, total: `${sign}${hours}h ${minutes}m` }
   } catch (err) {
@@ -237,7 +236,7 @@ async function saveToDB(db, data, user) {
       await db.put('records', {
         id: record.id,
         date: record.date,
-        time: record.time,
+        time: timeframe[key]?.total ? parseFloat(timeframe[key]?.total) : timeframe[key]?.total,
         total: timeframe[key]?.formatted,
         points: timeframe[key]?.points ?? [],
         user: record.user,

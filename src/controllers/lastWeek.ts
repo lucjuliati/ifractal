@@ -1,10 +1,11 @@
 
-import { baseUrl } from "../utils/config"
+import { baseUrl, isSecure } from "../utils/config"
 import { calculateWorkedTime, format } from "./report"
 import { isFuture, isWeekend, subDays } from "date-fns"
 import { getToken } from "../utils/getToken"
 import { Request, Response } from "express"
 import { TTLCache } from "../utils/cache"
+
 
 type Day = {
   date: string
@@ -70,8 +71,6 @@ export async function handleLastWeek(req: Request, res: Response) {
     Object.keys(lastWeek).forEach(day => {
       days[day] = { ...lastWeek[day], formatted: null, total: 0 }
     })
-    
-    console.log("fetching")
 
     try {
       await Promise.all(requests).then(async (responses) => {
@@ -98,7 +97,10 @@ export async function handleLastWeek(req: Request, res: Response) {
       })
     } catch (err) {
       console.error(err)
-      res.clearCookie("session")
+      res.clearCookie("session", {
+        httpOnly: true,
+        secure: isSecure,
+      })
       return res.render("login")
     }
 
