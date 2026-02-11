@@ -11,6 +11,10 @@ export function calculateWorkedTime(date: string, points: string[]): number | nu
   let minutes = 0
   let total = 0
 
+  if (points.length === 0) {
+    return null
+  }
+
   if (points.length % 2 !== 0) {
     const d = new Date()
     const h = d.toLocaleTimeString('en-GB', { timeZone: 'America/Sao_Paulo', hour: '2-digit' })
@@ -23,9 +27,10 @@ export function calculateWorkedTime(date: string, points: string[]): number | nu
     } else {
       const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
       const difference2 = differenceInMinutes(now, timestamps[2]) / 60
-
+      console.log(difference1, difference2)
       total = difference1 + difference2
     }
+
     hours = Math.floor(total)
     minutes = Math.round((total - hours) * 60)
   } else if (points.length > 0) {
@@ -44,7 +49,6 @@ export function calculateWorkedTime(date: string, points: string[]): number | nu
     hours = Math.abs(hours)
   }
 
-
   return Number(Math.abs(total).toFixed(2))
 }
 
@@ -52,11 +56,21 @@ export function decimalToTime(decimal: number) {
   const hours = Math.floor(decimal)
   const minutes = Math.round((decimal - hours) * 60)
 
+  if (hours.toString() === "NaN" || minutes.toString() === "NaN") {
+    return "0h 00min"
+  }
+
   return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
 }
 
 export function format(date: string, points: string[]) {
-  return decimalToTime(calculateWorkedTime(date, points) as number)
+  const calc = calculateWorkedTime(date, points)
+
+  if (!calc || isNaN(calc)) {
+    return "0h 00min"
+  }
+
+  return decimalToTime(calc)
 }
 
 class ReportController {
