@@ -1,8 +1,8 @@
 
-import { baseUrl } from "../utils/config"
+import { baseUrl } from "../utils"
 import { handleLastWeek } from "./lastWeek"
-import { getToken } from "../utils/getToken"
 import { Request, Response } from "express"
+import { getToken } from "../utils"
 
 const isSecure = process.env.NODE_ENV === "production"
 

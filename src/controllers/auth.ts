@@ -1,6 +1,4 @@
-
-import parseCookie from "../utils/parseCookie"
-import { baseUrl } from "../utils/config"
+import { baseUrl, parseCookie } from "../utils"
 import { Request, Response } from "express"
 
 const isSecure = process.env.NODE_ENV === "production"
@@ -32,7 +30,7 @@ class AuthController {
             maxAge: 24 * 60 * 60 * 1000
           })
 
-          res.status(200).send()
+          res.status(200).json({ success: true })
         } else {
           throw new Error("Invalid data")
         }

@@ -1,5 +1,5 @@
 import { TTLCache } from "./utils/cache"
-import start from "./utils/start"
+import start from "./start"
 
 start()
 

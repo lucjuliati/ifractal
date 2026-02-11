@@ -1,12 +1,11 @@
-import { baseUrl, isSecure } from "../utils/config"
+import { baseUrl, isSecure } from "../utils"
 import { differenceInMinutes } from "date-fns"
-import { getToken } from "../utils/getToken"
 import { Request, Response } from "express"
+import { getToken } from "../utils"
+
+const myOffset = '-03:00'
 
 export function calculateWorkedTime(date: string, points: string[]): number | null {
-  const myOffset = '-03:00'
-
-  let timestamps = points?.map(time => `${date}T${time}:00${myOffset}`)
   let hours = 0
   let minutes = 0
   let total = 0
@@ -14,6 +13,8 @@ export function calculateWorkedTime(date: string, points: string[]): number | nu
   if (points.length === 0) {
     return null
   }
+
+  const timestamps = points?.map(time => `${date}T${time}:00${myOffset}`)
 
   if (points.length % 2 !== 0) {
     const d = new Date()

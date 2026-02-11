@@ -1,8 +1,7 @@
 
-import { baseUrl, isSecure } from "../utils/config"
+import { baseUrl, isSecure, getToken } from "../utils"
 import { calculateWorkedTime, format } from "./report"
 import { isFuture, isWeekend, subDays } from "date-fns"
-import { getToken } from "../utils/getToken"
 import { Request, Response } from "express"
 import { TTLCache } from "../utils/cache"
 

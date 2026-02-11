@@ -11,9 +11,7 @@ form.onsubmit = function (e) {
   if (login && password) {
     fetch("/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ login, password })
     }).then(async function (res) {
       const data = await res.json()
@@ -23,7 +21,7 @@ form.onsubmit = function (e) {
       } else {
         modal.showModal()
         modalContent.textContent = data?.error
-        setTimeout(() => closeModal(), 5000)
+        setTimeout(() => closeModal(), 4500)
       }
     })
   }

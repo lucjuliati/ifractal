@@ -1,7 +1,7 @@
 import express from "express"
 import { engine } from "express-handlebars"
 import cookieParser from "cookie-parser"
-import routes from "../routes"
+import routes from "./routes"
 
 export default function start(netlify = false) {
   const PORT = 4000
