@@ -14,10 +14,10 @@ const db = new IndexedDBUtil("dates", 1, [{
 
 let lastFetched = 0
 
-async function fetchData({ days = 7 }) {
+async function fetchData() {
   lastFetched = new Date().getTime()
 
-  fetch(`/data?days=${days}`)
+  fetch("/data")
     .then(res => res.json())
     .then(async ({ data }) => renderData(data))
     .catch(console.error)
