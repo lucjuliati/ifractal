@@ -14,10 +14,10 @@ const db = new IndexedDBUtil("dates", 1, [{
 
 let lastFetched = 0
 
-async function fetchData() {
+async function fetchData({ days = 7 }) {
   lastFetched = new Date().getTime()
 
-  fetch("/data")
+  fetch(`/data?days=${days}`)
     .then(res => res.json())
     .then(async ({ data }) => renderData(data))
     .catch(console.error)
@@ -60,7 +60,7 @@ async function renderData(serverData) {
     if (serverData?.days) {
       await saveToDB(db, serverData?.days, serverData?.user)
     }
-    
+
     await renderWorkWeek(db, serverData?.user)
 
     itens.forEach(item => dataContainer.appendChild(item))

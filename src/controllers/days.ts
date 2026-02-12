@@ -19,12 +19,19 @@ export async function handleLastWeek(req: Request, res: Response) {
     let data = null
     let lastWeek: { [key: string]: { date: string, isFuture: boolean } } = {}
     const { user } = getToken(req)
+    let count: number = 7
 
-    Array.from({ length: 12 }).reverse().forEach((_, i) => {
+    if (req.query?.days) {
+      count = Number(req.query.days)
+      if (count < 7) count = 7
+      if (count > 30) count = 30
+    }
+
+    Array.from({ length: (count + 5) }).reverse().forEach((_, i) => {
       const day = subDays(new Date(), i)
       const date = day.toISOString().split("T")[0]
 
-      if (Object.keys(lastWeek).length < 7 && !isWeekend(day)) {
+      if (Object.keys(lastWeek).length < count && !isWeekend(day)) {
         lastWeek[date] = {
           date,
           isFuture: isFuture(`${day} 23:59:59`),
