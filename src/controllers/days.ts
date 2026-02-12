@@ -26,7 +26,7 @@ export async function handleLastWeek(req: Request, res: Response) {
       if (count < 7) count = 7
       if (count > 30) count = 30
     }
-
+    
     Array.from({ length: (count + 5) }).reverse().forEach((_, i) => {
       const day = subDays(new Date(), i)
       const date = day.toISOString().split("T")[0]

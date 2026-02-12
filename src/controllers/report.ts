@@ -28,7 +28,7 @@ export function calculateWorkedTime(date: string, points: string[]): number | nu
     } else {
       const difference1 = differenceInMinutes(timestamps[1], timestamps[0]) / 60
       const difference2 = differenceInMinutes(now, timestamps[2]) / 60
-      console.log(difference1, difference2)
+
       total = difference1 + difference2
     }
 

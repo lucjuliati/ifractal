@@ -16,10 +16,16 @@ let lastFetched = 0
 
 async function fetchData() {
   lastFetched = new Date().getTime()
+  const days = new URLSearchParams(document.location.search).get("days")
+  let url = "/data"
 
-  fetch("/data")
+  if (days) {
+    url += `?days=${days}`
+  }
+
+  fetch(url)
     .then(res => res.json())
-    .then(async ({ data }) => renderData(data))
+    .then(async (data) => renderData(data))
     .catch(console.error)
 }
 

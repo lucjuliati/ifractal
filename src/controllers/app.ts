@@ -1,10 +1,8 @@
 
-import { baseUrl } from "../utils"
-import { handleLastWeek } from "./days"
+import { baseUrl, isSecure } from "../utils"
 import { Request, Response } from "express"
+import { handleLastWeek } from "./days"
 import { getToken } from "../utils"
-
-const isSecure = process.env.NODE_ENV === "production"
 
 class AppController {
   async index(req: Request, res: Response) {
@@ -57,7 +55,7 @@ class AppController {
       return res.status(400).send()
     }
 
-    const { token } = getToken(req)
+    const { user, token } = getToken(req)
 
     fetch(baseUrl + "/db/estrutura.php", {
       method: "POST",
@@ -72,7 +70,7 @@ class AppController {
       })
     }).then(async (data) => {
       const response = await data.text()
-      let json = {} as { colab?: { centro1: string } }
+      let json = {} as { colab?: { centro1: {} } }
 
       if (response.includes("<html")) {
         res.clearCookie("session", {
@@ -86,7 +84,9 @@ class AppController {
       }
 
       return res.status(200).json({
-        data: json?.colab?.centro1
+        ...json?.colab?.centro1,
+        days: await handleLastWeek(req, res),
+        user
       })
     }).catch(console.error)
   }
