@@ -110,7 +110,7 @@ async function renderWorkWeek(db, user) {
   try {
     const { records, total } = await getRecords(db, user)
 
-    const container = document.querySelector("#last-week")
+    const container = document.querySelector("#days")
     container.innerHTML = ""
 
     const table = document.createElement("table")

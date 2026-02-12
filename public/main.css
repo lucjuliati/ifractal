@@ -340,30 +340,12 @@ button {
   }
 }
 
-details:has(#last-week) {
-  max-width: 400px;
-  margin: 0 auto;
-
-  &>summary {
-    text-align: center;
-    margin-top: 8px;
-    padding: 8px 0;
-    list-style: none;
-    border-radius: 6px;
-
-    &:hover {
-      background-color: #353535;
-      cursor: pointer;
-    }
-  }
-}
-
-#last-week {
+#days {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-bottom: 40px;
-  width: 400px;
+  width: fit-content;
   margin: 0 auto;
 
   span {

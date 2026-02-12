@@ -1,7 +1,5 @@
-import { baseUrl, parseCookie } from "../utils"
+import { baseUrl, isSecure, parseCookie } from "../utils"
 import { Request, Response } from "express"
-
-const isSecure = process.env.NODE_ENV === "production"
 
 class AuthController {
   async login(req: Request, res: Response) {
@@ -9,7 +7,7 @@ class AuthController {
       req.body = JSON.parse(req.body.toString())
     }
 
-    fetch(baseUrl + "/conf/login.inc.php", {
+    await fetch(baseUrl + "/conf/login.inc.php", {
       method: "POST",
       body: new URLSearchParams({
         primeiro_login: "true",
@@ -30,7 +28,6 @@ class AuthController {
             maxAge: 24 * 60 * 60 * 1000
           })
 
-          res.status(200).json({ success: true })
         } else {
           throw new Error("Invalid data")
         }
@@ -41,6 +38,9 @@ class AuthController {
       console.error(err)
       res.status(400).json({ error: "Usuário ou senha incorretos!" })
     })
+
+    res.setHeader("Content-Type", "application/json")
+    res.status(200).json({ success: true })
   }
 }
 

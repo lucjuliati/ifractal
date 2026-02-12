@@ -57,8 +57,8 @@ async function renderData(serverData) {
       renderDate("Atualizado em", lastUpdated)
     ].filter(item => item !== null)
 
-    if (serverData?.lastWeek) {
-      await saveToDB(db, serverData?.lastWeek, serverData?.user)
+    if (serverData?.days) {
+      await saveToDB(db, serverData?.days, serverData?.user)
     }
     
     await renderWorkWeek(db, serverData?.user)

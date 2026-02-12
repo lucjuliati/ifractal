@@ -1,6 +1,6 @@
 
 import { baseUrl } from "../utils"
-import { handleLastWeek } from "./lastWeek"
+import { handleLastWeek } from "./days"
 import { Request, Response } from "express"
 import { getToken } from "../utils"
 
@@ -41,7 +41,7 @@ class AppController {
 
         const data = JSON.stringify({
           ...json?.colab?.centro1,
-          lastWeek: await handleLastWeek(req, res),
+          days: await handleLastWeek(req, res),
           user,
         })
         return res.render("home", { data })
