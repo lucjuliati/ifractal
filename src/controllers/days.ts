@@ -5,7 +5,6 @@ import { isFuture, isWeekend, subDays } from "date-fns"
 import { Request, Response } from "express"
 import { TTLCache } from "../utils/cache"
 
-
 type Day = {
   date: string
   isFuture: boolean
@@ -26,7 +25,7 @@ export async function handleLastWeek(req: Request, res: Response) {
       if (count < 7) count = 7
       if (count > 30) count = 30
     }
-    
+
     Array.from({ length: (count + 5) }).reverse().forEach((_, i) => {
       const day = subDays(new Date(), i)
       const date = day.toISOString().split("T")[0]
@@ -89,10 +88,10 @@ export async function handleLastWeek(req: Request, res: Response) {
           const workedTime = calculateWorkedTime(key, mcs)
           const formatted = format(key, mcs)
           const day = lastWeek[key]
-
+          
           days[day.date] = { ...day, formatted, total: workedTime, points: mcs }
 
-          if (i > 0 && !isNaN(Number(workedTime))) {
+          if (i > 0 && !isNaN(Number(workedTime)) && workedTime !== null) {
             if (!isNaN((parseFloat(workedTime?.toString()!) - 8))) {
               total += (parseFloat(workedTime?.toString()!) - 8)
             } else {

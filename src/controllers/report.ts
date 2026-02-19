@@ -58,7 +58,7 @@ export function decimalToTime(decimal: number) {
   const minutes = Math.round((decimal - hours) * 60)
 
   if (hours.toString() === "NaN" || minutes.toString() === "NaN") {
-    return "0h 00min"
+    return "---"
   }
 
   return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
@@ -68,7 +68,7 @@ export function format(date: string, points: string[]) {
   const calc = calculateWorkedTime(date, points)
 
   if (!calc || isNaN(calc)) {
-    return "0h 00min"
+    return "---"
   }
 
   return decimalToTime(calc)

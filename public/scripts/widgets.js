@@ -183,7 +183,8 @@ async function getRecords(db, user) {
     records.sort((a, b) => new Date(b.date) - new Date(a.date))
 
     for (let i = 0; i < records.length; i++) {
-      if (i > 0 && !isNaN(records[i]?.time)) {
+
+      if (i > 0 && !isNaN(records[i]?.time) && records[i]?.time != null) {
         if (records[i]?.time == 0) continue
 
         if (!isNaN((parseFloat(records[i]?.time) - 8))) {
