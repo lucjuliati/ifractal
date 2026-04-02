@@ -32,6 +32,8 @@ export function Main({ initialData }: Props) {
 
       if (res.status === 401) {
         router.push("/logout")
+      } else {
+        document.dispatchEvent(new CustomEvent("data-ready", {}))
       }
 
       const json = JSON.parse(await res.json()) as TimeClockData

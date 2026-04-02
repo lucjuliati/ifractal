@@ -19,7 +19,7 @@ type HandleIntervalParams = {
 
 function clampDays(days?: number): number {
   const count = days ?? 7
-  return Math.max(7, Math.min(30, count))
+  return Math.max(7, Math.min(30, count)) + 5
 }
 
 function buildWorkdayRange(count: number): Record<string, { date: string; isFuture: boolean }> {
@@ -118,12 +118,13 @@ export async function handleInterval({ days }: HandleIntervalParams) {
     if (cached) return cached
 
     const count = clampDays(days)
+    
     const lastWeek = buildWorkdayRange(count)
 
     const requests = Object.keys(lastWeek)
       .filter((day) => !lastWeek[day].isFuture)
       .map((day) => fetchDayData(day, token))
-
+    
     try {
       const responses = await Promise.all(requests)
       const { interval, total } = await processResponses(responses, lastWeek)

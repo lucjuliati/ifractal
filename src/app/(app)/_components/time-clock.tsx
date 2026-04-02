@@ -28,12 +28,15 @@ export function TimeClock({ data }: Props) {
   }, [])
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get("days")) {
-      setTimeout(() => router.replace("/"), 250)
-    }
+    const reload = () => router.replace("/")
+
+    document.addEventListener("data-ready", reload)
 
     queueMicrotask(() => getLunchBreak())
+
+    return () => {
+      document.removeEventListener("data-ready", reload)
+    }
   }, [data, router, getLunchBreak])
 
   const decimalToTime = (decimal: number) => {
@@ -81,7 +84,7 @@ export function TimeClock({ data }: Props) {
 
   const handleSpecialClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (data.user != "lucasvinicius") return
-    
+
     if (e.altKey) {
       e.preventDefault()
       window.open("/phonto", "_blank", "noopener,noreferrer")

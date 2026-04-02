@@ -11,7 +11,6 @@ type Params = {
 export const GET = async (_: Request, { params }: Params) => {
   try {
     const { date } = await params
-    console.log(date)
     const { user, token } = await getToken()
 
     if (!user || !token) return NextResponse.json(null, { status: 401 })
