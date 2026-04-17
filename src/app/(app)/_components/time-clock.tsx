@@ -129,15 +129,28 @@ export function TimeClock({ data }: Props) {
         </div>
 
         <div className="mb-2">
-          <Select
-            options={[
-              { value: "1", label: "1 Hora" },
-              { value: "2", label: "2 Horas" },
-            ]}
-            value={lunchBreakHours.toString()}
-            onChange={(value) => handleLunchBreak(value)}
-            label="Horas de almoço"
-          />
+          {data.dados.mcs.length >= 3 ? (
+            <p className="text-sm text-gray-400 bg-[#121212] rounded border border-neutral-600/40 p-2 mb-1">
+              Duração do almoço: <span className="text-white font-semibold">{(() => {
+                const [h1, m1] = data.dados.mcs[1].replace("e", "").split(":").map(Number)
+                const [h2, m2] = data.dados.mcs[2].replace("e", "").split(":").map(Number)
+                const diffMin = (h2 * 60 + m2) - (h1 * 60 + m1)
+                const hours = Math.floor(diffMin / 60)
+                const minutes = diffMin % 60
+                return `${hours}h ${minutes < 10 ? "0" + minutes : minutes}min`
+              })()}</span>
+            </p>
+          ) : (
+            <Select
+              options={[
+                { value: "1", label: "1 Hora" },
+                { value: "2", label: "2 Horas" },
+              ]}
+              value={lunchBreakHours.toString()}
+              onChange={(value) => handleLunchBreak(value)}
+              label="Horas de almoço"
+            />
+          )}
         </div>
 
         <div className="mb-4" data-testid="progress">
