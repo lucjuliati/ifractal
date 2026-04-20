@@ -19,6 +19,7 @@ export function Main({ initialData }: Props) {
   const fetchData = useCallback(async () => {
     try {
       if (document.hidden) return
+      console.log("fetching data")
 
       const params = new URLSearchParams(window.location.search)
       const days = params.get("days")
@@ -29,7 +30,7 @@ export function Main({ initialData }: Props) {
       }
 
       const res = await fetch(url)
-
+      console.log(res.status)
       if (res.status === 401) {
         router.push("/logout")
       } else {
@@ -44,9 +45,13 @@ export function Main({ initialData }: Props) {
   }, [router])
 
   useEffect(() => {
-    intervalRef.current = setInterval(fetchData, 60_000)
+    intervalRef.current = setInterval(() => fetchData(), 60_000)
+
+    window.addEventListener("focus", fetchData)
 
     return () => {
+      window.removeEventListener("focus", fetchData)
+      
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
       }

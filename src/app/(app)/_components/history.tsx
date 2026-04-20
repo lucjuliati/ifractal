@@ -4,6 +4,14 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { LocalDaysData, StoredRecord, TimeClockData } from "@/lib/types"
 import { DatabaseContext } from "@/lib/context/database"
 
+function formatTotal(total: number): string {
+  const sign = total < 0 ? "-" : ""
+  const abs = Math.abs(total)
+  const hours = Math.floor(abs)
+  const minutes = Math.round((abs - hours) * 60)
+  return `${sign}${hours}h ${minutes}m`
+}
+
 type Props = {
   data: TimeClockData
 }
@@ -92,14 +100,40 @@ export function History({ data }: Props) {
     [localDays]
   )
 
+  const computedTotal = useMemo(() => {
+    if (sortedDays.length === 0) return null
+
+    let total = 0
+
+    for (let i = 1; i < sortedDays.length; i++) {
+      let workedTime = sortedDays[i][1].total
+
+      if (workedTime !== null && workedTime !== undefined && !isNaN(Number(workedTime))) {
+        if (workedTime > 10) {
+          workedTime = 8
+        }
+
+        const diff = parseFloat(workedTime.toString()) - 8
+
+        if (!isNaN(diff)) {
+          total += diff
+        } else {
+          total += 8
+        }
+      }
+    }
+
+    return formatTotal(total)
+  }, [sortedDays])
+
   return (
     <div className="p-6 space-y-6">
       <div className="bg-neutral-900 rounded-lg shadow-sm p-6 py-0 min-h-[120px] max-h-[90vh] pb-[50px] overflow-y-auto">
-        <div className={data?.days.total ? "sticky top-0 z-10 bg-neutral-900" : "hidden"}>
+        <div className={computedTotal ? "sticky top-0 z-10 bg-neutral-900" : "hidden"}>
           <div className="flex gap-x-1 mb-1 py-3" data-testid="total-worked">
             <span className="opacity-80">Total:</span>
-            <span className="font-bold" style={{ color: data?.days.total?.startsWith("-") ? "#da7260" : "#2f9c7b" }}>
-              {data?.days.total}
+            <span className="font-bold" style={{ color: computedTotal?.startsWith("-") ? "#da7260" : "#2f9c7b" }}>
+              {computedTotal}
             </span>
           </div>
         </div>
@@ -121,11 +155,6 @@ export function DayCard({ date, dayData }: DayCardProps) {
       day: "numeric",
       month: "long",
     })
-  }
-
-  const left = dayData.points.length - 4
-  if (left > 0) {
-
   }
 
   return (

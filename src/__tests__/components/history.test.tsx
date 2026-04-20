@@ -49,8 +49,17 @@ describe("History", () => {
   })
 
   it("shows total worked time", async () => {
+    const storedRecords = [
+      { id: 1, date: "2026-03-11", total: "8h 00min", time: 8, points: ["08:00", "17:00"], user: "testuser" },
+      { id: 2, date: "2026-03-12", total: "6h 30min", time: 6.5, points: ["09:00", "15:30"], user: "testuser" },
+    ]
+    // saveData calls getByIndex for each day (byUserAndDate), then loadFromDB calls getByIndex (byUser)
+    mockDb.getByIndex
+      .mockResolvedValueOnce([])   // saveData: byUserAndDate for first day
+      .mockResolvedValueOnce([])   // saveData: byUserAndDate for second day
+      .mockResolvedValueOnce(storedRecords) // loadFromDB: byUser
     await act(async () => render(<History data={mockData} />, { wrapper }))
-    expect(screen.getByTestId("total-worked")).toHaveTextContent("+0h00")
+    expect(screen.getByTestId("total-worked")).toHaveTextContent("0h 0m")
   })
 
   it("hides total section when total is falsy", async () => {

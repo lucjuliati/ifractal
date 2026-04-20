@@ -20,11 +20,19 @@ const EXPECTED_HOURS = 8
 export function Chart({ data }: Props) {
   const chartData = Object.values(data)
     .sort((a, b) => a.date.localeCompare(b.date))
-    .map((d) => ({
-      date: d.date.slice(5),
-      total: d.total,
-      formatted: d.formatted,
-    }))
+    .map((d) => {
+      let total = d.total
+      
+      if (total > 10) {
+        total = 10
+      }
+
+      return {
+        date: d.date.slice(5),
+        total: d.total,
+        formatted: d.formatted,
+      }
+    })
 
   return (
     <div className="w-full p-4" data-testid="chart">
