@@ -1,5 +1,7 @@
 "use client"
 import { LocalDaysData } from "@/lib/types"
+import { format, parseISO } from "date-fns"
+import { ptBR } from "date-fns/locale"
 import {
   BarChart,
   Bar,
@@ -20,19 +22,12 @@ const EXPECTED_HOURS = 8
 export function Chart({ data }: Props) {
   const chartData = Object.values(data)
     .sort((a, b) => a.date.localeCompare(b.date))
-    .map((d) => {
-      let total = d.total
-      
-      if (total > 10) {
-        total = 10
-      }
-
-      return {
-        date: d.date.slice(5),
-        total: d.total,
-        formatted: d.formatted,
-      }
-    })
+    .map((d) => ({
+      date: d.date.slice(5),
+      fullDate: d.date,
+      total: d.total,
+      formatted: d.formatted,
+    }))
 
   return (
     <div className="w-full p-4" data-testid="chart">
@@ -40,7 +35,11 @@ export function Chart({ data }: Props) {
       <ResponsiveContainer width="100%" height={300} className="outline-none mt-1">
         <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }} className="outline-none">
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+          <XAxis
+            dataKey="fullDate"
+            tickFormatter={(v) => format(parseISO(v), "dd/MM")}
+            tick={{ fontSize: 12 }}
+          />
           <YAxis
             domain={[0, 10]}
             tickFormatter={(v) => `${v}h`}
@@ -51,12 +50,21 @@ export function Chart({ data }: Props) {
             cursor={{ fill: "#525252", opacity: 0.3, cursor: "pointer" }}
             labelStyle={{ color: "#ffffff" }}
             itemStyle={{ color: "#cacaca" }}
+            labelFormatter={(_label, payload) => {
+              const fullDate = payload?.[0]?.payload?.fullDate
+              if (!fullDate) return _label
+              return format(parseISO(fullDate), "EEEE, d 'de' MMMM", { locale: ptBR })
+            }}
             formatter={(_value, _name, props) => [
               props.payload.formatted,
               "Trabalhado",
             ]}
           />
-          <ReferenceLine y={EXPECTED_HOURS} stroke="#f59e0b" strokeDasharray="12 2" label={{ value: "8h", position: "right", fontSize: 11 }} />
+          <ReferenceLine
+            y={EXPECTED_HOURS}
+            stroke="#f59e0b"
+            strokeDasharray="12 2" label={{ value: "8h", position: "right", fontSize: 11 }}
+          />
           <Bar
             dataKey="total"
             radius={[4, 4, 0, 0]}

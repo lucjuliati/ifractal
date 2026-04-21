@@ -15,11 +15,10 @@ export function Main({ initialData }: Props) {
   const router = useRouter()
   const [data, setData] = useState<TimeClockData>(JSON.parse(initialData))
   const intervalRef = useRef<NodeJS.Timeout>(null)
-
+  
   const fetchData = useCallback(async () => {
     try {
       if (document.hidden) return
-      console.log("fetching data")
 
       const params = new URLSearchParams(window.location.search)
       const days = params.get("days")
@@ -30,7 +29,7 @@ export function Main({ initialData }: Props) {
       }
 
       const res = await fetch(url)
-      console.log(res.status)
+      
       if (res.status === 401) {
         router.push("/logout")
       } else {
@@ -38,6 +37,7 @@ export function Main({ initialData }: Props) {
       }
 
       const json = JSON.parse(await res.json()) as TimeClockData
+
       setData(json)
     } catch (err) {
       console.error(err)

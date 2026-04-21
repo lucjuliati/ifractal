@@ -25,7 +25,7 @@ function clampDays(days?: number): number {
 function buildWorkdayRange(count: number): Record<string, { date: string; isFuture: boolean }> {
   const range: Record<string, { date: string; isFuture: boolean }> = {}
 
-  Array.from({ length: count + 5 }).forEach((_, i) => {
+  Array.from({ length: count - 1 }).forEach((_, i) => {
     if (Object.keys(range).length >= count) return
 
     const day = subDays(new Date(), i)
@@ -35,7 +35,7 @@ function buildWorkdayRange(count: number): Record<string, { date: string; isFutu
       range[date] = { date, isFuture: isFuture(`${day} 23:59:59`) }
     }
   })
-
+  
   return range
 }
 
@@ -118,13 +118,13 @@ export async function handleInterval({ days }: HandleIntervalParams) {
     if (cached) return cached
 
     const count = clampDays(days)
-    
+
     const lastWeek = buildWorkdayRange(count)
 
     const requests = Object.keys(lastWeek)
       .filter((day) => !lastWeek[day].isFuture)
       .map((day) => fetchDayData(day, token))
-    
+
     try {
       const responses = await Promise.all(requests)
       const { interval, total } = await processResponses(responses, lastWeek)

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import { TimeClockData } from "@/lib/types"
 import { useRouter } from "next/navigation"
 import { Select } from "@/app/ui/select"
+import { ProgressBar } from "./progress-bar"
 
 type Props = {
   data: TimeClockData
@@ -130,7 +131,7 @@ export function TimeClock({ data }: Props) {
 
         <div className="mb-2">
           {data.dados.mcs.length >= 3 ? (
-            <p className="text-sm text-gray-400 bg-[#121212] rounded border border-neutral-600/40 p-2 mb-1">
+            <p className="text-sm text-gray-400 bg-[#121212] rounded border border-neutral-600/40 flex items-center px-2 mb-1 h-[42px] gap-x-1">
               Duração do almoço: <span className="text-white font-semibold">{(() => {
                 const [h1, m1] = data.dados.mcs[1].replace("e", "").split(":").map(Number)
                 const [h2, m2] = data.dados.mcs[2].replace("e", "").split(":").map(Number)
@@ -153,18 +154,12 @@ export function TimeClock({ data }: Props) {
           )}
         </div>
 
-        <div className="mb-4" data-testid="progress">
-          <div className="flex justify-between text-sm mb-1 text-gray-300">
-            <span>Progresso</span>
-            <span>{data.dados.perct_trabalhado}%</span>
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
-            <div
-              className="bg-blue-500 h-2 rounded-full transition-all"
-              style={{ width: `${Math.min(data.dados.perct_trabalhado, 100)}%` }}
-            />
-          </div>
-        </div>
+        <ProgressBar
+          percentage={data.dados.perct_trabalhado}
+          worked={Number(data.dados.trabalhado)}
+          expected={Number(data.dados.previsto)}
+          points={data.dados.mcs}
+        />
 
         <div className="pt-1">
           <div className="flex flex-wrap gap-2" data-testid="points">

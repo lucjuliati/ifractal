@@ -1,6 +1,7 @@
 "use client"
 
 import { loginAction } from "@/lib/actions/login"
+import { Lock, User } from "lucide-react"
 import { useActionState, useRef } from "react"
 
 const initialState = { error: {} }
@@ -41,26 +42,14 @@ export default function LoginForm() {
             backdropFilter: "blur(24px)",
             border: "1px solid rgba(255,255,255,0.08)",
             boxShadow: "0 4px 4px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)",
-          }}
-        >
+          }}>
           <div className="flex justify-center mb-5">
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center"
+              className="w-12 h-12 rounded-[32px] flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, #8e65ff, #174db3)",
+                background: "linear-gradient(135deg, #4372f3ff, #174db3)",
               }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-7 h-7 text-white"
-                fill="white"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                stroke="currentColor"
-                strokeWidth={1.8}>
-                <path strokeLinecap="round" strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
+              <User />
             </div>
           </div>
 
@@ -68,24 +57,34 @@ export default function LoginForm() {
             Faça login para continuar
           </p>
 
-          <form action={formAction} className="flex flex-col gap-3">
-            <input
-              type="text"
-              name="login"
-              placeholder="Usuário"
-              className="w-full px-4 py-3 rounded-md text-sm text-white bg-neutral-800 outline-none border border-neutral-700 focus:border-indigo-400"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Senha"
-              className="w-full px-4 py-3 rounded-md text-sm text-white bg-neutral-800 outline-none border border-neutral-700 focus:border-indigo-400 mt-1"
-            />
+          <form action={formAction} className="flex flex-col gap-y-2">
+            <div>
+              <label className="flex items-center gap-x-1 opacity-70 text-[14px] mb-[2px]">
+                <User size={18} />
+                Usuário
+              </label>
+              <input
+                type="text"
+                name="login"
+                className="w-full px-4 py-3 rounded-md text-sm text-white bg-neutral-800 outline-none border border-neutral-700 focus:border-indigo-400"
+              />
+            </div>
+            <div>
+              <label className="flex items-center gap-x-1 opacity-70 text-[14px] mb-[2px]">
+                <Lock size={18} />
+                Senha
+              </label>
+              <input
+                type="password"
+                name="password"
+                className="w-full px-4 py-3 rounded-md text-sm text-white bg-neutral-800 outline-none border border-neutral-700 focus:border-indigo-400"
+              />
+            </div>
 
             <button
               type="submit"
               className="mt-1 w-full py-3 rounded-md text-sm font-semibold text-white tracking-wide transition-opacity duration-150 hover:opacity-85 focus:scale-[0.98] cursor-pointer mt-4"
-              style={{ background: "linear-gradient(135deg,  #8e65ff 30%, #174db3 80%)", }}>
+              style={{ background: "linear-gradient(135deg,  #4372f3ff 30%, #174db3 80%)", }}>
               Acessar
             </button>
           </form>

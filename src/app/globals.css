@@ -113,3 +113,33 @@ input:-webkit-autofill {
   transition: background-color 9999s ease-in-out 0s;
   caret-color: aqua;
 }
+
+.tooltip-container {
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.692);
+    z-index: 5;
+  }
+}
+
+.tooltip-container:has(> .progress-tooltip):hover > .progress-tooltip {
+  display: block;
+}
+
+.progress-tooltip {
+  position: absolute;
+  display: none;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #202020;
+  border: 1px solid #333333;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #fff;
+  user-select: none;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}

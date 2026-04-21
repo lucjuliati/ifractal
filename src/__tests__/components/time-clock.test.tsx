@@ -37,18 +37,26 @@ describe("TimeClock", () => {
     expect(screen.getByTestId("worked-percentage")).toHaveTextContent("75%")
   })
 
-  it("renders progress bar with correct width", () => {
+  it("renders progress bar with segmented work and lunch", () => {
     render(<TimeClock data={mockData} />)
     const progress = screen.getByTestId("progress")
-    const bar = progress.querySelector(".bg-blue-500") as HTMLElement
-    expect(bar.style.width).toBe("75%")
+    const blueSegments = progress.querySelectorAll(".bg-blue-500") as NodeListOf<HTMLElement>
+    const lunchSegment = progress.querySelector(".bg-amber-500") as HTMLElement
+
+    expect(blueSegments.length).toBe(2)
+    expect(lunchSegment).not.toBeNull()
+    expect(parseFloat(lunchSegment.style.width)).toBeGreaterThan(0)
   })
 
-  it("caps progress bar at 100% when percentage exceeds 100", () => {
-    const overData = { ...mockData, dados: { ...mockData.dados, perct_trabalhado: 120 } }
+  it("caps total progress bar segments at 100%", () => {
+    const overData = { ...mockData, dados: { ...mockData.dados, perct_trabalhado: 120, trabalhado: 9.6 } }
     render(<TimeClock data={overData} />)
-    const bar = screen.getByTestId("progress").querySelector(".bg-blue-500") as HTMLElement
-    expect(bar.style.width).toBe("100%")
+    const progress = screen.getByTestId("progress")
+    const segments = progress.querySelectorAll(".tooltip-container") as NodeListOf<HTMLElement>
+    const totalWidth = Array.from(segments).reduce(
+      (sum, el) => sum + parseFloat(el.style.width), 0
+    )
+    expect(totalWidth).toBeCloseTo(100, 0)
   })
 
   it("renders all time points", () => {
