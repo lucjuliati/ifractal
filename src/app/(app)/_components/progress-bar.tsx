@@ -34,7 +34,6 @@ export function ProgressBar({ percentage, worked, expected, points: rawMcs }: Pr
     const lunchOut = toMinutes(mcs[1])
     const lunchIn = mcs.length >= 3 ? toMinutes(mcs[2]) : null
 
-    // Guard against invalid or out-of-order times
     if (isNaN(firstPunch) || isNaN(lunchOut) || lunchOut <= firstPunch) {
       return renderSimpleBar()
     }
@@ -131,7 +130,7 @@ export function ProgressBar({ percentage, worked, expected, points: rawMcs }: Pr
         <span>Progresso</span>
         <span>{percentage}%</span>
       </div>
-      <div className="w-full rounded-full h-[10px] flex relative gap-x-[1px]">
+      <div className="w-full rounded-full h-[10px] flex relative gap-x-[1px] bg-neutral-700/60">
         {hasSegments ? renderSegmentedBar() : renderSimpleBar()}
       </div>
     </div>

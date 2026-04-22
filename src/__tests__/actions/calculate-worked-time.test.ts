@@ -7,19 +7,16 @@ describe("calculateWorkedTime", () => {
   })
 
   it("calculates a full day with 4 points (2 intervals)", () => {
-    // 08:00–12:00 = 4h, 13:00–17:00 = 4h → 8h
     const result = calculateWorkedTime("2024-03-13", ["08:00", "12:00", "13:00", "17:00"])
     expect(result).toBe(8)
   })
 
   it("calculates a single complete interval", () => {
-    // 09:00–11:30 = 2.5h
     const result = calculateWorkedTime("2024-03-13", ["09:00", "11:30"])
     expect(result).toBe(2.5)
   })
 
   it("handles odd number of points (open interval uses current time)", () => {
-    // With 1 point the clock is still running — result should be > 0
     const result = calculateWorkedTime("2024-03-13", ["08:00"])
     expect(result).not.toBeNull()
     expect(result).toBeGreaterThan(0)
@@ -32,7 +29,6 @@ describe("calculateWorkedTime", () => {
 
   it("rounds to 2 decimal places", () => {
     const result = calculateWorkedTime("2024-03-13", ["08:00", "09:10"])
-    // 70 minutes = 1.1666... → 1.17
     expect(result).toBe(1.17)
   })
 })
